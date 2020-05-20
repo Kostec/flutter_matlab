@@ -26,14 +26,21 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  Path path;
+  Paint paint;
+  Canvas canvas;
+
+  @override
+  void initState() {
+//    path = Path();
+//    path.lineTo(25.0, 25.0);
+//    paint = Paint();
+//    paint.color = Colors.black;
+//    paint.style = PaintingStyle.stroke;
+//    paint.strokeWidth = 2.0;
+//    canvas.drawPath(path, paint);
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,11 +49,13 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Stack(
         children: <Widget>[
-          BlockWidget(),
+          BlockWidget(x: 20.0, y: 20.0,),
+          BlockWidget(x: 80.0, y: 20.0,),
+          BlockWidget(x: 20.0, y: 80.0,),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: (){print('Float');},
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),

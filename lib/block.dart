@@ -8,41 +8,38 @@ class Block{
 }
 
 class BlockWidget extends StatefulWidget{
+  double x; double y;
+  BlockWidget({this.x, this.y});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return BlockWidgetState();
+    return BlockWidgetState(x: x, y: y);
   }
 
-}
-
-class Position{
-  double x;
-  double y;
-
-  Position({this.x, this.y});
 }
 
 class BlockWidgetState extends State<BlockWidget>{
 
   Block block;
 
-  double x;
-  double y;
+  double x; double y;
   double dx = 0, dy = 0;
 
   double width, height;
-  double tapX, tapY;
+
+  bool canTransmit = false;
 
   Color border_color = Colors.black;
 
   Border border;
   BoxDecoration decoration;
 
+  BlockWidgetState({this.x, this.y});
+
   @override
   void initState() {
     block = Block(name: 'Block');
-    x = 25.0; y = 25.0;
 
     width = 100;
     height = 50;
@@ -60,22 +57,29 @@ class BlockWidgetState extends State<BlockWidget>{
          crossAxisAlignment: CrossAxisAlignment.center,
          mainAxisAlignment: MainAxisAlignment.center,
          children: [
-          Container(
-            width: 10,
-            height: 10,
-            decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
-          ),
+            Container(
+              width: 10,
+              height: 10,
+              decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
+            ),
           GestureDetector(
             onTapDown: (details){
               setState(() {
                 border_color = Colors.red;
-//                dx = 0;
-//                dy = 0;
                 dx = details.localPosition.dx;
                 dy = details.localPosition.dy;
+                canTransmit = true;
+              });
+            },
+            onTapUp: (details){
+              setState(() {
+                border_color = Colors.black;
+                canTransmit = false;
               });
             },
             onPanUpdate: (details){
+              if (!canTransmit) return;
+
               x += details.localPosition.dx - dx;
               y += details.localPosition.dy - dy;
 
@@ -86,11 +90,9 @@ class BlockWidgetState extends State<BlockWidget>{
               });
             },
             onPanEnd: (details){
-              print('PanCancel');
               setState(() {
                 border_color = Colors.black;
-                dx = 0;
-                dy = 0;
+                canTransmit = false;
               });
             },
             child:Container(
