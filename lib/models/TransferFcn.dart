@@ -1,8 +1,8 @@
 import 'Block.dart';
 
 class TransferFcn extends Block{
-  List<double> nums = [];
-  List<double> dens = [];
+  List<double> nums = [1];
+  List<double> dens = [1,1];
 
   TransferFcn({this.nums, this.dens});
 
@@ -30,4 +30,25 @@ class TransferFcn extends Block{
   String densToString(){
     return arrayToString(dens);
   }
+
+  @override
+  String toString() {
+    return numsToString();
+  }
+
+  @override
+  List<String> getDisplay() {
+    return [
+      numsToString(),
+      densToString(),
+    ];
+  }
+
+  @override
+  Map<String, dynamic> getPreference() {
+    var temp = {'nums': nums, 'dens': dens};
+    return temp;
+  }
+
+
 }

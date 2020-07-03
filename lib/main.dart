@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttermatlab/models/transfer-fcn.dart';
+import 'package:fluttermatlab/models/TransferFcn.dart';
 import 'package:fluttermatlab/widgets/block.dart';
 
 void main() => runApp(MyApp());
