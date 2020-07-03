@@ -17,17 +17,14 @@ class BlockWidget extends StatefulWidget{
 
 class BlockWidgetState extends State<BlockWidget>{
 
+  final GlobalKey<ScaffoldState> _scaggoldKey = GlobalKey<ScaffoldState>();
   Block block;
 
   double x; double y;
   double dx = 0, dy = 0;
-
   double width, height;
-
   bool canTransmit = false;
-
   Color border_color = Colors.black;
-
   Border border;
   BoxDecoration decoration;
 
@@ -36,10 +33,8 @@ class BlockWidgetState extends State<BlockWidget>{
   @override
   void initState() {
     block = Block(name: 'Block');
-
     width = 100;
     height = 50;
-
     border = Border.all(color: Colors.black);
     decoration = BoxDecoration(border: border);
   }
@@ -59,6 +54,9 @@ class BlockWidgetState extends State<BlockWidget>{
               decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
             ),
           GestureDetector(
+            onDoubleTap: (){
+              print('Double Tap ${block.name}');
+            },
             onTapDown: (details){
               setState(() {
                 border_color = Colors.red;
@@ -109,4 +107,5 @@ class BlockWidgetState extends State<BlockWidget>{
       ]),
     );
   }
+  
 }

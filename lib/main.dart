@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttermatlab/models/simple-model.dart';
+import 'package:fluttermatlab/models/transfer-fcn.dart';
 import 'package:fluttermatlab/widgets/block.dart';
 
 void main() => runApp(MyApp());
@@ -35,10 +35,13 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
 
-    SimpleModel model;
+    TransferFcn model = new TransferFcn();
     model.nums = [1, 2, 3, 0, 5,];
-    var str = model.numsToString();
-    print(str);
+    model.dens = [6, 7, 8, 9, 10, 11,];
+    var nums = model.numsToString();
+    var dens = model.densToString();
+    print(nums);
+    print(dens);
 //    path = Path();
 //    path.lineTo(25.0, 25.0);
 //    paint = Paint();
