@@ -1,11 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
-class Block{
-  String name;
-  Block({this.name = 'Block'});
-}
+import 'package:fluttermatlab/models/Block.dart';
 
 class BlockWidget extends StatefulWidget{
   double x; double y;
