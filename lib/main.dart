@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttermatlab/models/TransferFcn.dart';
+import 'package:fluttermatlab/pages/chart.dart';
 import 'package:fluttermatlab/widgets/block.dart';
+
+import 'widgets/menu.dart';
 
 void main() => runApp(MyApp());
 
@@ -24,6 +27,10 @@ class MyHomePage extends StatefulWidget {
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
+
+  static void OpenPage(BuildContext context) async{
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> MyHomePage(title: 'HomePage',)));
+  }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -52,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   @override
   Widget build(BuildContext context) {
-    var drawer = _buildDrawer();
+    var drawer = Menu();
     var appBar = _buildAppBar();
     var body = _buildBody();
     return Scaffold(
@@ -63,28 +70,6 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: (){print('Float');},
         tooltip: 'Increment',
         child: Icon(Icons.add),
-      ),
-    );
-  }
-
-  Drawer _buildDrawer(){
-    return Drawer(
-      child: ListView(
-        children: <Widget>[
-          DrawerHeader(
-            decoration: BoxDecoration(color: Theme.of(context).backgroundColor),
-            child: Column(
-              children: <Widget>[
-                Text('Text 1'),
-                Text('Text 2'),
-              ],
-            ),
-          ),
-          ListTile(
-            title: Text('Item 1'),
-            onTap: (){print('Item 1');},
-          ),
-        ],
       ),
     );
   }
