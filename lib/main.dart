@@ -52,22 +52,56 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   @override
   Widget build(BuildContext context) {
+    var drawer = _buildDrawer();
+    var appBar = _buildAppBar();
+    var body = _buildBody();
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Stack(
-        children: <Widget>[
-          BlockWidget(x: 20.0, y: 20.0,),
-          BlockWidget(x: 80.0, y: 20.0,),
-          BlockWidget(x: 20.0, y: 80.0,),
-        ],
-      ),
+      drawer: drawer,
+      appBar: appBar,
+      body: body,
       floatingActionButton: FloatingActionButton(
         onPressed: (){print('Float');},
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
+    );
+  }
+
+  Drawer _buildDrawer(){
+    return Drawer(
+      child: ListView(
+        children: <Widget>[
+          DrawerHeader(
+            decoration: BoxDecoration(color: Theme.of(context).backgroundColor),
+            child: Column(
+              children: <Widget>[
+                Text('Text 1'),
+                Text('Text 2'),
+              ],
+            ),
+          ),
+          ListTile(
+            title: Text('Item 1'),
+            onTap: (){print('Item 1');},
+          ),
+        ],
+      ),
+    );
+  }
+
+  AppBar _buildAppBar(){
+    return AppBar(
+      title: Text(widget.title),
+    );
+  }
+
+  Widget _buildBody(){
+    return Stack(
+      children: <Widget>[
+        BlockWidget(x: 20.0, y: 20.0,),
+        BlockWidget(x: 80.0, y: 20.0,),
+        BlockWidget(x: 20.0, y: 80.0,),
+      ],
     );
   }
 }
