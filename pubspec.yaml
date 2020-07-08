@@ -24,6 +24,12 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   syncfusion_flutter_charts: ^18.1.59
+  zoom_widget: ^0.1.3
+  global_configuration: ^1.5.0
+  step_progress_indicator: ^0.2.3+6
+  timeline_tile: ^0.1.2
+  syncfusion_flutter_core: ^18.2.44
+
 
 dev_dependencies:
   flutter_test:
