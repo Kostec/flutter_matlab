@@ -1,5 +1,7 @@
+import 'package:fluttermatlab/models/Block.dart';
+
 /// Класс предназначен для выполения моделирования
-class solver{
+class Solver{
   double T = 1e-6;
   double startTime = 0.0;
   double endTime = 10.0;
@@ -13,8 +15,8 @@ class solver{
   }
 
   /// Решатель, выполняет полное моделирование TODO
-  void sove(){
-
+  void solve(Block block){
+    block.evaluate();
   }
 
   ///Останавливает моделирование TODO

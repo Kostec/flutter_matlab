@@ -41,7 +41,6 @@ class BlockWidgetState extends State<BlockWidget>{
 
   @override
   void initState() {
-//    block = Block(name: 'Block');
     block = TransferFcn(nums: [1,2], dens: [3,4]);
     width = 100;
     height = 50;

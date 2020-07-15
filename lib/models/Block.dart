@@ -1,6 +1,8 @@
-class Block {
+abstract class Block {
   String name;
   Block({this.name = 'Block'});
+  List<double> input;
+  List<double> output;
 
   @override
   String toString() {
@@ -14,4 +16,6 @@ class Block {
   List<String> getDisplay() {
     return [this.name];
   }
+
+  List<double> evaluate();
 }

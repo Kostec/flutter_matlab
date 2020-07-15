@@ -23,11 +23,13 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
-  zoom_widget: ^0.1.3
-  global_configuration: ^1.5.0
+  
+  zoom_widget: ^0.1.3 # Масштабируемый виджут
+  global_configuration: ^1.5.0 # Глобвльные настройки
   step_progress_indicator: ^0.2.3+6
-  timeline_tile: ^0.1.2
-  fl_chart: ^0.10.1
+  timeline_tile: ^0.1.2 # Вищуализация последовательности действий
+  fl_chart: ^0.10.1 # Графики
+  math_expressions: ^2.0.0 # Отрисовка формул
 
 
 dev_dependencies:

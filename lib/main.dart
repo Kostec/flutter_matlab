@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttermatlab/models/TransferFcn.dart';
 import 'package:fluttermatlab/pages/chart.dart';
+import 'package:fluttermatlab/services/modeling.dart';
 import 'package:fluttermatlab/widgets/block.dart';
 
 import 'widgets/menu.dart';
@@ -41,7 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-
     TransferFcn model = new TransferFcn();
     model.nums = [1, 2, 3, 0, 5,];
     model.dens = [6, 7, 8, 9, 10, 11,];
@@ -49,13 +49,8 @@ class _MyHomePageState extends State<MyHomePage> {
     var dens = model.densToString();
     print(nums);
     print(dens);
-//    path = Path();
-//    path.lineTo(25.0, 25.0);
-//    paint = Paint();
-//    paint.color = Colors.black;
-//    paint.style = PaintingStyle.stroke;
-//    paint.strokeWidth = 2.0;
-//    canvas.drawPath(path, paint);
+
+    Solver solver = new Solver();
   }
   @override
   Widget build(BuildContext context) {

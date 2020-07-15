@@ -1,8 +1,12 @@
 import 'Block.dart';
 
 class TransferFcn extends Block{
+  static const int numOutput = 1;
+  static const int numInput = 1;
   List<double> nums = [1];
   List<double> dens = [1,1];
+  List<double> output = new List(numOutput);
+  List<double> input = new List(numInput);
 
   TransferFcn({this.nums, this.dens});
 
@@ -50,5 +54,9 @@ class TransferFcn extends Block{
     return temp;
   }
 
-
+  @override
+  List<double> evaluate() {
+    print('Evaluate TransferFcn');
+    return null;
+  }
 }
