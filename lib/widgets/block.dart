@@ -7,17 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttermatlab/models/Block.dart';
+import 'package:fluttermatlab/models/BlockIO.dart';
 import 'package:fluttermatlab/models/TransferFcn.dart';
 import 'package:fluttermatlab/pages/block-preference.dart';
+import 'package:fluttermatlab/widgets/io.dart';
 
 class BlockWidget extends StatefulWidget{
   double x; double y;
-  BlockWidget({this.x, this.y});
+  Block block;
+  BlockWidget({this.x, this.y, this.block});
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return BlockWidgetState(x: x, y: y);
+    return BlockWidgetState(x: x, y: y, block: block);
   }
 
 }
@@ -34,24 +37,41 @@ class BlockWidgetState extends State<BlockWidget>{
   Color border_color = Colors.black;
   Border border;
   BoxDecoration decoration;
-
   List<Widget> display = [];
-
-  BlockWidgetState({this.x, this.y});
+  List<Widget> inputs = [];
+  List<Widget> outputs = [];
+  BlockWidgetState({this.x, this.y, this.block});
 
   @override
   void initState() {
-    block = TransferFcn(nums: [1,2], dens: [3,4]);
     width = 100;
     height = 50;
     border = Border.all(color: Colors.black);
     decoration = BoxDecoration(border: border);
 
     var toDisplay = block.getDisplay();
-    toDisplay.forEach((element) {
-      display.add(Text(element));
-      display.add(Divider(color: Colors.black,));
-    });
+    for (int i = 0; i < toDisplay.length; i++){
+      display.add(Text(toDisplay[i]));
+      if (toDisplay.length - i > 1) display.add(Divider(color: Colors.black,));
+    }
+
+//    inputs.add(IOWidget());
+//    outputs.add(IOWidget());
+    for (int i = 0; i < block.numInput; i++){
+      inputs.add(Container(
+        width: 10,
+        height: 20,
+        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
+      ),);
+    }
+    for (int i = 0; i < block.numOutput; i++){
+      outputs.add(Container(
+        width: 10,
+        height: 20,
+        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
+      ),);
+    }
+
   }
 
   @override
@@ -63,12 +83,9 @@ class BlockWidgetState extends State<BlockWidget>{
            crossAxisAlignment: CrossAxisAlignment.center,
            mainAxisAlignment: MainAxisAlignment.center,
            children: [
-            Container(
-              width: 10,
-              height: 20,
-              decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
-            ),
-            GestureDetector(
+             Column(children: inputs),
+//             Column(children: inputs),
+             GestureDetector(
               onDoubleTap: (){
                 print('Double Tap ${block.name}');
                 Navigator.push(context, MaterialPageRoute(builder: (context) => BlockPreferencePage(block: block,)));
@@ -111,20 +128,17 @@ class BlockWidgetState extends State<BlockWidget>{
                 child: Align(
                   alignment: Alignment.center,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: display,
                   ),
                 )
           ),),
-            Container(
-              width: 10,
-              height: 10,
-              decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
-            ),
-        ]),
+//             Column(children: outputs),
+             Column(children: outputs),
+          ]),
           Text('${block.name}'),
       ]),
     );
   }
-
-
 }

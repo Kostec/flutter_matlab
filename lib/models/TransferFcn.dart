@@ -1,12 +1,12 @@
 import 'Block.dart';
+import 'BlockIO.dart';
 
 class TransferFcn extends Block{
-  static const int numOutput = 1;
-  static const int numInput = 1;
+  int numOutput = 1;
+  int numInput = 1;
   List<double> nums = [1];
   List<double> dens = [1,1];
-  List<double> output = new List(numOutput);
-  List<double> input = new List(numInput);
+  List<BlockIO> IO;
 
   TransferFcn({this.nums, this.dens});
 
@@ -55,8 +55,22 @@ class TransferFcn extends Block{
   }
 
   @override
-  List<double> evaluate() {
+  List<double> evaluate(double T) {
     print('Evaluate TransferFcn');
-    return null;
+    super.evaluate(T);
+    var _out = IO.firstWhere((io) => io.type == IOtype.input)?.value;
+    var _in = IO.firstWhere((io) => io.type == IOtype.output)?.value;
+    if (_in == null || _out == null) return [0];
+    double up = 0;
+    double down = 0;
+    for(int i = 0; i < nums.length; i++){
+      up += nums[i] / (T * i);
+    }
+    for(int i = 0; i < dens.length; i++){
+      down += dens[i] / (T * i);
+    }
+    _out = _in * up / down;
+    state.addEntries([new MapEntry(time, [_out])]);
+    return [_out];
   }
 }

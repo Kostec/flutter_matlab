@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttermatlab/models/Constant.dart';
 import 'package:fluttermatlab/models/TransferFcn.dart';
 import 'package:fluttermatlab/pages/chart.dart';
 import 'package:fluttermatlab/services/modeling.dart';
@@ -78,9 +79,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildBody(){
     return Stack(
       children: <Widget>[
-        BlockWidget(x: 20.0, y: 20.0,),
-        BlockWidget(x: 80.0, y: 20.0,),
-        BlockWidget(x: 20.0, y: 80.0,),
+        BlockWidget(x: 20.0, y: 20.0, block: new TransferFcn(nums: [1], dens: [1,1])),
+        BlockWidget(x: 60.0, y: 80.0, block: new Constant(value: 3)),
       ],
     );
   }
