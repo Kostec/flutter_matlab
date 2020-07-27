@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttermatlab/models/Block.dart';
+import 'package:fluttermatlab/models/BlockIO.dart';
 import 'package:fluttermatlab/models/Constant.dart';
 import 'package:fluttermatlab/models/TransferFcn.dart';
 import 'package:fluttermatlab/pages/chart.dart';
@@ -41,15 +43,21 @@ class _MyHomePageState extends State<MyHomePage> {
   Paint paint;
   Canvas canvas;
 
+  Block transfer;
+  Block constant;
+
   @override
   void initState() {
-    TransferFcn model = new TransferFcn();
-    model.nums = [1, 2, 3, 0, 5,];
-    model.dens = [6, 7, 8, 9, 10, 11,];
-    var nums = model.numsToString();
-    var dens = model.densToString();
-    print(nums);
-    print(dens);
+
+    transfer = new TransferFcn(nums: [1], dens: [1,1]);
+    constant = new Constant(value: 3);
+
+    constant.addOutput(transfer, 0, 0);
+
+    constant.removeOutput(constant.IO[0]);
+//    constant.addIO(transfer, 1, 1, IOtype.output);
+
+//    constant.removeIO(constant.IO[0]);
 
     Solver solver = new Solver();
   }
@@ -79,8 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildBody(){
     return Stack(
       children: <Widget>[
-        BlockWidget(x: 20.0, y: 20.0, block: new TransferFcn(nums: [1], dens: [1,1])),
-        BlockWidget(x: 60.0, y: 80.0, block: new Constant(value: 3)),
+        BlockWidget(x: 20.0, y: 20.0, block: transfer),
+        BlockWidget(x: 60.0, y: 80.0, block: constant),
       ],
     );
   }

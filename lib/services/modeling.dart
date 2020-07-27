@@ -25,7 +25,7 @@ class Solver{
       var nextBlocks = blocks.where((block) => block.IO.contains(inputs[i]))?.toList();
       nextBlocks.forEach((block) {
         if (block.time != modelingTime) {
-          var temp = block.IO.where((element) => element.type == IOtype.input && element.block.time == modelingTime);
+          var temp = block.IO.where((element) => element.type == IOtype.input && element.blockIn.time == modelingTime);
           if (temp.toList().length == block.IO.length) {
             block.evaluate(T);
           }

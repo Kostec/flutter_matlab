@@ -6,9 +6,11 @@ class TransferFcn extends Block{
   int numInput = 1;
   List<double> nums = [1];
   List<double> dens = [1,1];
-  List<BlockIO> IO;
+  String name;
 
-  TransferFcn({this.nums, this.dens});
+  TransferFcn({this.nums, this.dens, this.name = 'TransferFcn'}){
+
+  }
 
   String arrayToString(List<double> nums){
     String str = '';
