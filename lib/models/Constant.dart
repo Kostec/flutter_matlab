@@ -2,7 +2,7 @@ import 'package:fluttermatlab/models/Block.dart';
 
 class Constant extends Block{
   double value = 1;
-  int numOutput = 1;
+  int numOut = 1;
   String name;
   Constant({this.value = 1, this.name = "Constant"});
 

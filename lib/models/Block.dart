@@ -1,8 +1,8 @@
 import 'BlockIO.dart';
 
 abstract class Block {
-  int numOutput = 0;
-  int numInput = 0;
+  int numOut = 0;
+  int numIn = 0;
   String name;
   Block({this.name = 'Block'});
   List<BlockIO> IO = [];
@@ -18,10 +18,10 @@ abstract class Block {
   }
 
   void setDefaultIO(){
-    for(int i = 0; i < numInput; i++){
+    for(int i = 0; i < numIn; i++){
       IO.add(PortInput(blockOut: null, blockIn: this, numOut: null, numIn: i));
     }
-    for(int i = 0; i < numOutput; i++){
+    for(int i = 0; i < numOut; i++){
       IO.add(PortOutput(blockOut: this, blockIn: null, numOut: i, numIn: null));
     }
   }
@@ -33,7 +33,7 @@ abstract class Block {
 
   void addInput(Block blockOut, int portIn, int portOut){
     var blockIn = this;
-    if (blockIn.numInput < portIn || blockOut.numOutput < portOut){
+    if (blockIn.numIn < portIn || blockOut.numOut < portOut){
       print ('Не удалось соединить порты');
       return;
     }
@@ -44,16 +44,16 @@ abstract class Block {
     output.Input = input;
     output.Output = output;
     var inputs = Inputs;
-    var checkIn = inputs.length > 0 ? inputs.firstWhere((element) => element.blockOut== blockOut && element.blockIn == blockIn && numInput == portIn && numOutput == portOut) : null;
+    var checkIn = inputs.length > 0 ? inputs.firstWhere((element) => element.blockOut== blockOut && element.blockIn == blockIn && numIn == portIn && numOut == portOut) : null;
     if (checkIn == null) this.IO.add(input);
     var out_outputs = blockOut.Outputs;
-    var checkOut = out_outputs.length > 0 ? out_outputs.firstWhere((element) => element.blockOut== blockOut && element.blockIn == blockIn && numInput == portIn && numOutput == portOut) : null;
+    var checkOut = out_outputs.length > 0 ? out_outputs.firstWhere((element) => element.blockOut== blockOut && element.blockIn == blockIn && numIn == portIn && numOut == portOut) : null;
     if (checkOut == null) blockOut.IO.add(output);
   }
 
   void addOutput(Block blockIn, int portIn, int portOut){
     var blockOut = this;
-    if (blockIn.numInput < portIn || blockOut.numOutput < portOut){
+    if (blockIn.numIn < portIn || blockOut.numOut < portOut){
       print ('Не удалось соединить порты');
       return;
     }
@@ -64,10 +64,10 @@ abstract class Block {
     output.Output = output;
     output.Input = input;
     var outputs = Outputs;
-    var checkOut = outputs.length > 0 ? outputs.firstWhere((element) => element.blockOut== blockOut && element.blockIn == blockIn && numInput == portIn && numOutput == portOut, orElse: null) : null;
+    var checkOut = outputs.length > 0 ? outputs.firstWhere((element) => element.blockOut== blockOut && element.blockIn == blockIn && numIn == portIn && numOut == portOut, orElse: null) : null;
     if (checkOut == null)this.IO.add(output);
     var out_inputs = blockIn.Inputs;
-    var checkIn = out_inputs.length > 0 ? out_inputs.firstWhere((element) => element.blockOut== blockOut && element.blockIn == blockIn && numInput == portIn && numOutput == portOut, orElse: null) : null;
+    var checkIn = out_inputs.length > 0 ? out_inputs.firstWhere((element) => element.blockOut== blockOut && element.blockIn == blockIn && numIn == portIn && numOut == portOut, orElse: null) : null;
     if (checkIn == null) blockIn.IO.add(input);
   }
 

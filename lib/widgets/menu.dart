@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttermatlab/pages/chart.dart';
+import 'package:fluttermatlab/pages/model_constuctor.dart';
 
 import '../main.dart';
 
@@ -38,7 +39,7 @@ class _MenuState extends State<Menu>{
               ],
             ),
           ),
-          ListTile(title: Text('Main'), onTap: (){MyHomePage.OpenPage(context);},),
+          ListTile(title: Text('Model'), onTap: (){ModelPage.OpenPage(context);},),
           ListTile(title: Text('ChartPage'), onTap: (){ChartPage.OpenPage(context);},),
           ListTile(title: Text('Item 3'), onTap: (){print('Item 3');},),
           ListTile(title: Text('Item 4'), onTap: (){print('Item 4');},),

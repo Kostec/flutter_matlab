@@ -2,8 +2,8 @@ import 'Block.dart';
 import 'BlockIO.dart';
 
 class TransferFcn extends Block{
-  int numOutput = 1;
-  int numInput = 1;
+  int numOut = 1;
+  int numIn = 1;
   List<double> nums = [1];
   List<double> dens = [1,1];
   String name;

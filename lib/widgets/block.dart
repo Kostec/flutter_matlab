@@ -57,14 +57,14 @@ class BlockWidgetState extends State<BlockWidget>{
 
 //    inputs.add(IOWidget());
 //    outputs.add(IOWidget());
-    for (int i = 0; i < block.numInput; i++){
+    for (int i = 0; i < block.numIn; i++){
       inputs.add(Container(
         width: 10,
         height: 20,
         decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
       ),);
     }
-    for (int i = 0; i < block.numOutput; i++){
+    for (int i = 0; i < block.numOut; i++){
       outputs.add(Container(
         width: 10,
         height: 20,

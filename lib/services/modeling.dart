@@ -7,10 +7,12 @@ class Solver{
   double startTime = 0.0;
   double endTime = 10.0;
   double modelingTime = 0;
+  List<Block> model;
 
   /// Делает один шаг моделирования TODO: нужен тип для моделирования (блок)
   void step(double nowTime, double nowValue){
     if (nowTime == endTime){
+      evaluate(model);
       stop();
       return;
     }
@@ -19,19 +21,13 @@ class Solver{
   /// Выполняет полное решение системы
   void evaluate(List<Block> blocks)
   {
-    var inputs = blocks.where((block) => block.numInput == 0).toList();
-    for (int i = 0; i < inputs.length; i++)
-    {
-      var nextBlocks = blocks.where((block) => block.IO.contains(inputs[i]))?.toList();
-      nextBlocks.forEach((block) {
-        if (block.time != modelingTime) {
-          var temp = block.IO.where((element) => element.type == IOtype.input && element.blockIn.time == modelingTime);
-          if (temp.toList().length == block.IO.length) {
-            block.evaluate(T);
-          }
-        }
+    var inputs = blocks.where((element) => element.Outputs == null).toList();
+    inputs.forEach((element) {
+      element.IO.forEach((port) {
+        port.Input.value = port.value;
+        if (port.blockIn.numIn == 1) port.blockIn.evaluate(T);
       });
-    }
+    });
   }
 
   ///Останавливает моделирование TODO
