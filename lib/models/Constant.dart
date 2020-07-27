@@ -22,4 +22,18 @@ class Constant extends Block{
   List<String> getDisplay() {
     return [toString()];
   }
+
+  @override
+  Map<String, dynamic> getPreference() {
+    var temp = super.getPreference();
+    temp.addAll({'value': value});
+    return temp;
+  }
+
+  @override
+  void setPreference(Map<String, dynamic> preference){
+    name = preference['name'];
+    value = double.parse(preference['value']);
+    print('set');
+  }
 }

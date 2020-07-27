@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import 'BlockIO.dart';
 
 abstract class Block {
@@ -91,6 +93,10 @@ abstract class Block {
 
   Map<String, dynamic> getPreference(){
     return {'name': name};
+  }
+
+  void setPreference(Map<String, dynamic> preference){
+
   }
 
   List<String> getDisplay() {

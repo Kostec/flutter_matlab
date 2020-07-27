@@ -52,8 +52,27 @@ class TransferFcn extends Block{
 
   @override
   Map<String, dynamic> getPreference() {
-    var temp = {'nums': nums, 'dens': dens};
+    var temp = super.getPreference();
+    temp.addAll({'nums': nums, 'dens': dens});
     return temp;
+  }
+
+  @override
+  void setPreference(Map<String, dynamic> preference){
+    name = preference['name'];
+    var numsStr = preference['nums'].toString().replaceAll('[', '').replaceAll(']', '');
+    var nums = numsStr.split(',');
+    this.nums.clear();
+    for(int i = 0; i < nums.length; i++){
+      this.nums.add(double.parse(nums[i]));
+    }
+    var densStr = preference['dens'].toString().replaceAll('[', '').replaceAll(']', '');
+    var dens = densStr.split(',');
+    this.dens.clear();
+    for(int i = 0; i < dens.length; i++){
+      this.dens.add(double.parse(dens[i]));
+    }
+    print('set');
   }
 
   @override

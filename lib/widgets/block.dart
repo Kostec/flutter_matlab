@@ -49,14 +49,6 @@ class BlockWidgetState extends State<BlockWidget>{
     border = Border.all(color: Colors.black);
     decoration = BoxDecoration(border: border);
 
-    var toDisplay = block.getDisplay();
-    for (int i = 0; i < toDisplay.length; i++){
-      display.add(Text(toDisplay[i]));
-      if (toDisplay.length - i > 1) display.add(Divider(color: Colors.black,));
-    }
-
-//    inputs.add(IOWidget());
-//    outputs.add(IOWidget());
     for (int i = 0; i < block.numIn; i++){
       inputs.add(Container(
         width: 10,
@@ -76,6 +68,7 @@ class BlockWidgetState extends State<BlockWidget>{
 
   @override
   Widget build(BuildContext context) {
+    getDisplay();
     return Positioned(top: y, left: x,
       child: Column(
         children: [
@@ -84,11 +77,12 @@ class BlockWidgetState extends State<BlockWidget>{
            mainAxisAlignment: MainAxisAlignment.center,
            children: [
              Column(children: inputs),
-//             Column(children: inputs),
              GestureDetector(
-              onDoubleTap: (){
+              onDoubleTap: () async {
                 print('Double Tap ${block.name}');
-                Navigator.push(context, MaterialPageRoute(builder: (context) => BlockPreferencePage(block: block,)));
+                await Navigator.push(context, MaterialPageRoute(builder: (context) => BlockPreferencePage(block: block,)));
+                setState(() {
+                });
               },
               onTapDown: (details){
                 setState(() {
@@ -140,5 +134,14 @@ class BlockWidgetState extends State<BlockWidget>{
           Text('${block.name}'),
       ]),
     );
+  }
+
+  void getDisplay(){
+    display.clear();
+    var toDisplay = block.getDisplay();
+    for (int i = 0; i < toDisplay.length; i++){
+      display.add(Text(toDisplay[i]));
+      if (toDisplay.length - i > 1) display.add(Divider(color: Colors.black,));
+    }
   }
 }

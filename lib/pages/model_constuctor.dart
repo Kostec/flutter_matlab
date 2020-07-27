@@ -11,8 +11,7 @@ class ModelPage extends StatefulWidget{
 
   @override
   State createState() => _ModelPageState();
-
-  static void OpenPage(BuildContext context) async{
+    static void OpenPage(BuildContext context) async{
     Navigator.push(context, MaterialPageRoute(builder: (context)=> ModelPage()));
   }
 }
