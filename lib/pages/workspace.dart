@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttermatlab/services/workspace.dart';
+import 'package:fluttermatlab/widgets/menu.dart';
 
 class WorkspacePage extends StatefulWidget{
   @override
@@ -21,6 +22,7 @@ class _WorkspacePageState extends State<WorkspacePage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Menu(),
       appBar: _buildAppBar(),
       body: _buildBody(),
     );

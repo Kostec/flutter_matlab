@@ -20,12 +20,12 @@ class BlockWidget extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return BlockWidgetState(x: x, y: y, block: block);
+    return _BlockWidgetState(x: x, y: y, block: block);
   }
 
 }
 
-class BlockWidgetState extends State<BlockWidget>{
+class _BlockWidgetState extends State<BlockWidget>{
 
   final GlobalKey<ScaffoldState> _scaggoldKey = GlobalKey<ScaffoldState>();
   Block block;
@@ -41,7 +41,7 @@ class BlockWidgetState extends State<BlockWidget>{
   List<Widget> inputs = [];
   List<Widget> outputs = [];
   Widget displayWidget;
-  BlockWidgetState({this.x, this.y, this.block});
+  _BlockWidgetState({this.x, this.y, this.block});
 
   Map<String, Function> dialogItems;
 

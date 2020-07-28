@@ -3,17 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/Constant.dart';
 import 'package:fluttermatlab/models/TransferFcn.dart';
+import 'package:fluttermatlab/services/library.dart';
 import 'package:fluttermatlab/services/modeling.dart';
 import 'package:fluttermatlab/widgets/block.dart';
 import 'package:fluttermatlab/widgets/menu.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 
 class ModelPage extends StatefulWidget{
-
   @override
-  State createState() => _ModelPageState();
-    static void OpenPage(BuildContext context) async{
+  State createState() {
+    return _ModelPageState();
+  }
+
+  static void OpenPage(BuildContext context) async{
     Navigator.push(context, MaterialPageRoute(builder: (context)=> ModelPage()));
+
   }
 }
 
@@ -92,13 +96,16 @@ class _ModelPageState extends State<ModelPage>{
   }
 
   Widget _buildBody(){
-    return Zoom(
-      width: width,
-      height: heigh,
-      doubleTapZoom: true,
-      enableScroll: true,
-      child: Stack(children: blockWidgets,),
-    );
+    return GestureDetector(
+      onTapDown: (details) => print('OnTap'),
+      child: Zoom(
+        width: width,
+        height: heigh,
+        doubleTapZoom: true,
+        enableScroll: true,
+        child: Stack(children: blockWidgets,),
+    ));
+
   }
 
   void exit(){
@@ -117,6 +124,53 @@ class _ModelPageState extends State<ModelPage>{
     print('Создать новую модель');
   }
   void addBlock(){
-    print('Добавить новый блок');
+    var block = Constant(value: 10);
+    blocks.add(block);
+    blockWidgets.add(BlockWidget(x: 20, y: 20, block: block));
+    setState(() {});
   }
+
+
+  void showDialog(BuildContext context) {
+    showGeneralDialog(
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: Duration(milliseconds: 700),
+      context: context,
+      pageBuilder: (_, __, ___) {
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            height: 200,
+            child: ListView.builder(
+                itemCount: Library.blocks.length,
+                itemBuilder: (BuildContext context, int index){
+                  var key = Library.blocks.keys.toList()[index];
+                  var widget = BlockWidget(x: 0, y: 0, block: Library.blocks[key]);
+
+                  return SizedBox(
+                    width: 120,
+                    height: 100,
+                    child: widget,
+                  );
+                }),
+            margin: EdgeInsets.only(bottom: 50, left: 12, right: 12),
+            padding: EdgeInsets.only(bottom: 12, top: 12, left: 12, right: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(40),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (_, anim, __, child) {
+        return SlideTransition(
+          position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim),
+          child: child,
+        );
+      },
+    );
+  }
+
 }
