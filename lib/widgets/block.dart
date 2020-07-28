@@ -40,35 +40,30 @@ class BlockWidgetState extends State<BlockWidget>{
   List<Widget> display = [];
   List<Widget> inputs = [];
   List<Widget> outputs = [];
+  Widget displayWidget;
   BlockWidgetState({this.x, this.y, this.block});
+
+  Map<String, Function> dialogItems;
 
   @override
   void initState() {
+    dialogItems = {
+      'Перенос' : transmitSwitch,
+      'Подключить' : connectIt,
+      'Параметры' : openPreference,
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) {
     width = 100;
     height = 50;
     border = Border.all(color: Colors.black);
     decoration = BoxDecoration(border: border);
 
-    for (int i = 0; i < block.numIn; i++){
-      inputs.add(Container(
-        width: 10,
-        height: 20,
-        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
-      ),);
-    }
-    for (int i = 0; i < block.numOut; i++){
-      outputs.add(Container(
-        width: 10,
-        height: 20,
-        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
-      ),);
-    }
-
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    getDisplay();
+    buildInputs();
+    buildOutputs();
+    buildDisplay();
     return Positioned(top: y, left: x,
       child: Column(
         children: [
@@ -78,64 +73,55 @@ class BlockWidgetState extends State<BlockWidget>{
            children: [
              Column(children: inputs),
              GestureDetector(
-              onDoubleTap: () async {
-                print('Double Tap ${block.name}');
-                await Navigator.push(context, MaterialPageRoute(builder: (context) => BlockPreferencePage(block: block,)));
-                setState(() {
-                });
-              },
-              onTapDown: (details){
-                setState(() {
-                  border_color = Colors.red;
-                  dx = details.localPosition.dx;
-                  dy = details.localPosition.dy;
-                  canTransmit = true;
-                });
-              },
-              onTapUp: (details){
-                setState(() {
-                  border_color = Colors.black;
-                  canTransmit = false;
-                });
-              },
-              onPanUpdate: (details){
-                if (!canTransmit) return;
-
-                x += details.localPosition.dx - dx;
-                y += details.localPosition.dy - dy;
-
-                dx = details.localPosition.dx;
-                dy = details.localPosition.dy;
-
-                setState(() {
-                });
-              },
-              onPanEnd: (details){
-                setState(() {
-                  border_color = Colors.black;
-                  canTransmit = false;
-                });
-              },
-              child:Container(
-                decoration: BoxDecoration(border: Border.all(color: border_color)),
-                width: width, height: height,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: display,
-                  ),
-                )
-          ),),
-//             Column(children: outputs),
+               onLongPress: () async {showDialog(context);},
+               onTapDown:(details) => startTransmitting(details.localPosition.dx, details.localPosition.dy),
+               onTapUp: (details) => endTransmitting(),
+               onPanUpdate: (details) => transmitting(details.localPosition.dx, details.localPosition.dy),
+               onPanEnd: (details) => endTransmitting(),
+               child: displayWidget,
+             ),
              Column(children: outputs),
-          ]),
+           ]),
           Text('${block.name}'),
-      ]),
+        ]),
     );
   }
 
+  void buildInputs(){
+    inputs.clear();
+    for (int i = 0; i < block.numIn; i++){
+      inputs.add(Container(
+        width: 10,
+        height: 20,
+        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
+      ),);
+    }
+  }
+  void buildOutputs(){
+    outputs.clear();
+    for (int i = 0; i < block.numOut; i++){
+      outputs.add(Container(
+        width: 10,
+        height: 20,
+        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
+      ),);
+    }
+  }
+  void buildDisplay(){
+    getDisplay();
+    displayWidget = Container(
+        decoration: BoxDecoration(border: Border.all(color: border_color)),
+        width: width, height: height,
+        child: Align(
+          alignment: Alignment.center,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: display,
+          ),
+        )
+    );
+  }
   void getDisplay(){
     display.clear();
     var toDisplay = block.getDisplay();
@@ -144,4 +130,85 @@ class BlockWidgetState extends State<BlockWidget>{
       if (toDisplay.length - i > 1) display.add(Divider(color: Colors.black,));
     }
   }
+
+  void startTransmitting(double dx, double dy){
+    if (canTransmit)
+      setState(() {
+        border_color = Colors.red;
+        this.dx = dx;
+        this.dy = dy;
+      });
+  }
+  void transmitting(double dx, double dy){
+    if (!canTransmit) return;
+
+    this.x += dx - this.dx;
+    this.y += dy - this.dy;
+
+    this.dx = dx;
+    this.dy = dy;
+
+    setState(() {
+    });
+  }
+  void endTransmitting(){
+    setState(() {
+      border_color = Colors.black;
+    });
+  }
+
+  void showDialog(BuildContext context) {
+    showGeneralDialog(
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: Duration(milliseconds: 700),
+      context: context,
+      pageBuilder: (_, __, ___) {
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            height: 200,
+            child: ListView.builder(
+                    itemCount: dialogItems.length,
+                    itemBuilder: (BuildContext context, int index){
+                      var key = dialogItems.keys.toList()[index];
+                      var func = dialogItems[key];
+
+                      return Container(
+                          child: FlatButton(child: Text(key, style: TextStyle(color: Colors.black, fontSize: 32),), onPressed: func,),
+                      );
+            }),
+            margin: EdgeInsets.only(bottom: 50, left: 12, right: 12),
+            padding: EdgeInsets.only(bottom: 12, top: 12, left: 12, right: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(40),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (_, anim, __, child) {
+        return SlideTransition(
+          position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim),
+          child: child,
+        );
+      },
+    );
+  }
+  void openPreference() async {
+    await Navigator.push(context, MaterialPageRoute(builder: (context) => BlockPreferencePage(block: block,)));
+    setState(() {
+    });
+    Navigator.pop(context);
+  }
+  void transmitSwitch (){
+    print('transmit');
+    canTransmit = !canTransmit;
+    Navigator.pop(context);
+  }
+  void connectIt() {
+    print('connect');
+  }
+
 }

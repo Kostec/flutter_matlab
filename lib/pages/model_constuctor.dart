@@ -32,6 +32,7 @@ class _ModelPageState extends State<ModelPage>{
 
     double countX = 20;
     double countY = 20;
+
     blocks.forEach((block) {
       blockWidgets.add(BlockWidget(x: countX, y: countY, block: block));
       countX += 150;

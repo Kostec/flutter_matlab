@@ -10,6 +10,7 @@ class BlockPreferencePage extends StatefulWidget{
   Block block;
 
   BlockPreferencePage({@required this.block});
+
   @override
   State createState() {
     return _BlockPreferencePageState();
