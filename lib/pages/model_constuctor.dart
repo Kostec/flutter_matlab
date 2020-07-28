@@ -6,6 +6,7 @@ import 'package:fluttermatlab/models/TransferFcn.dart';
 import 'package:fluttermatlab/services/modeling.dart';
 import 'package:fluttermatlab/widgets/block.dart';
 import 'package:fluttermatlab/widgets/menu.dart';
+import 'package:zoom_widget/zoom_widget.dart';
 
 class ModelPage extends StatefulWidget{
 
@@ -21,9 +22,14 @@ class _ModelPageState extends State<ModelPage>{
   Paint paint;
   Canvas canvas;
 
+  double width = 2048;
+  double heigh = 2048;
+
   List<Block> blocks = [];
 
   List<BlockWidget> blockWidgets = [];
+
+  Map<String, Function> moreItems;
 
   @override
   void initState() {
@@ -40,6 +46,7 @@ class _ModelPageState extends State<ModelPage>{
 
     Solver solver = new Solver();
   }
+
   @override
   Widget build(BuildContext context) {
     var drawer = Menu();
@@ -58,15 +65,58 @@ class _ModelPageState extends State<ModelPage>{
   }
 
   AppBar _buildAppBar(){
+    moreItems = {
+      'Новыя модель' : newModel,
+      'Добавить блок' : addBlock,
+      'Сохранить' : save,
+      'Загрузить' : load,
+      'Настройки' : settings,
+      'Выход': exit,
+    };
     return AppBar(
       title: Text('Model'),
+      actions: [
+        PopupMenuButton(
+          onSelected: (value) => {moreItems[value]()},
+          itemBuilder: (BuildContext context) {
+            return moreItems.keys.map((choise) {
+              return PopupMenuItem<String>(
+                value: choise,
+                child: Text(choise),
+              );
+            }).toList();
+          }
+        )
+      ],
     );
   }
 
   Widget _buildBody(){
-    return Stack(
-      children: blockWidgets,
+    return Zoom(
+      width: width,
+      height: heigh,
+      doubleTapZoom: true,
+      enableScroll: true,
+      child: Stack(children: blockWidgets,),
     );
   }
 
+  void exit(){
+    print('Вы выходите из приложения');
+  }
+  void settings(){
+    print('Настройки приложения');
+  }
+  void save(){
+    print('Сохранить можель');
+  }
+  void load(){
+    print('Загрузить модель');
+  }
+  void newModel(){
+    print('Создать новую модель');
+  }
+  void addBlock(){
+    print('Добавить новый блок');
+  }
 }

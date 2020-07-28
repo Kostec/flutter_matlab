@@ -205,10 +205,12 @@ class BlockWidgetState extends State<BlockWidget>{
   void transmitSwitch (){
     print('transmit');
     canTransmit = !canTransmit;
+    endTransmitting();
     Navigator.pop(context);
   }
   void connectIt() {
     print('connect');
   }
+
 
 }
