@@ -8,7 +8,7 @@ class workspace{
   }
   /// Добавляет переменную в рабочую область
   static void addVariable(String name, dynamic value){
-    variables.addAll({name: value});
+    variables[name] = value;
   }
   /// Добавляет список переменных в рабочую область
   static void addVariableRange(Map<String, dynamic> vars){
