@@ -15,7 +15,8 @@ import 'package:fluttermatlab/widgets/io.dart';
 class BlockWidget extends StatefulWidget{
   double x; double y;
   Block block;
-  BlockWidget({this.x, this.y, this.block});
+  bool canOpenPreference;
+  BlockWidget({this.x, this.y, this.block, this.canOpenPreference = true});
 
   @override
   State<StatefulWidget> createState() {
@@ -73,7 +74,7 @@ class _BlockWidgetState extends State<BlockWidget>{
            children: [
              Column(children: inputs),
              GestureDetector(
-               onLongPress: () async {showDialog(context);},
+               onLongPress: widget.canOpenPreference ? () async {showDialog(context);} : null,
                onTapDown:(details) => startTransmitting(details.localPosition.dx, details.localPosition.dy),
                onTapUp: (details) => endTransmitting(),
                onPanUpdate: (details) => transmitting(details.localPosition.dx, details.localPosition.dy),

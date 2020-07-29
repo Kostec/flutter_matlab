@@ -7,8 +7,14 @@ import 'package:fluttermatlab/pages/workspace.dart';
 
 import '../main.dart';
 
-class Menu extends StatefulWidget{
+class MainMenu{
+  static Menu menu;
+  static init(){
+    menu = Menu();
+  }
+}
 
+class Menu extends StatefulWidget{
   @override
   State createState() {
     return _MenuState();
@@ -19,7 +25,6 @@ class _MenuState extends State<Menu>{
 
   @override
   void initState() {
-
   }
 
   @override
@@ -41,7 +46,7 @@ class _MenuState extends State<Menu>{
               ],
             ),
           ),
-          ListTile(title: Text('Model'), onTap: (){ Navigator.pop(context); ModelPage.OpenPage(context);},),
+          ListTile(title: Text('Model'), onTap: (){Navigator.pop(context); ModelPage.OpenPage(context);},),
           ListTile(title: Text('ChartPage'), onTap: (){ Navigator.pop(context); ChartPage.OpenPage(context);},),
           ListTile(title: Text('Workspace'), onTap: (){ Navigator.pop(context); WorkspacePage.OpenPage(context);},),
           ListTile(title: Text('Block library'), onTap: (){ Navigator.pop(context); BlockLibrary.OpenPage(context);},),

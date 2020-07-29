@@ -16,8 +16,7 @@ class ModelPage extends StatefulWidget{
   }
 
   static void OpenPage(BuildContext context) async{
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> ModelPage()));
-
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> ModelPage()));
   }
 }
 
@@ -53,19 +52,21 @@ class _ModelPageState extends State<ModelPage>{
 
   @override
   Widget build(BuildContext context) {
-    var drawer = Menu();
+    var drawer = MainMenu.menu;
     var appBar = _buildAppBar();
     var body = _buildBody();
-    return Scaffold(
-      drawer: drawer,
-      appBar: appBar,
-      body: body,
-      floatingActionButton: FloatingActionButton(
-        onPressed: null,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
-    );
+    return PageView(
+      children: [
+        Scaffold(
+          drawer: drawer,
+          appBar: appBar,
+          body: body,
+          floatingActionButton: FloatingActionButton(
+            onPressed: null,
+            tooltip: 'Increment',
+            child: Icon(Icons.add),
+          ),
+    )]);
   }
 
   AppBar _buildAppBar(){
@@ -148,12 +149,6 @@ class _ModelPageState extends State<ModelPage>{
                 itemBuilder: (BuildContext context, int index){
                   var key = Library.blocks.keys.toList()[index];
                   var widget = BlockWidget(x: 0, y: 0, block: Library.blocks[key]);
-
-                  return SizedBox(
-                    width: 120,
-                    height: 100,
-                    child: widget,
-                  );
                 }),
             margin: EdgeInsets.only(bottom: 50, left: 12, right: 12),
             padding: EdgeInsets.only(bottom: 12, top: 12, left: 12, right: 12),
@@ -172,5 +167,4 @@ class _ModelPageState extends State<ModelPage>{
       },
     );
   }
-
 }

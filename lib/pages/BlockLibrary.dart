@@ -25,7 +25,7 @@ class _BlockLibraryState extends State<BlockLibrary>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Menu(),
+      drawer: MainMenu.menu,
       appBar: _buildAppBar(),
       body: _buildBody(),
     );
@@ -44,7 +44,7 @@ class _BlockLibraryState extends State<BlockLibrary>{
         itemBuilder: (context, index){
           var key = Library.blocks.keys.toList()[index];
           var block = Library.blocks[key];
-          var widget = BlockWidget(x: 0, y: 0, block: block);
+          var widget = BlockWidget(x: 0, y: 0, block: block, canOpenPreference: false,);
           return ListTile(
             subtitle: Container(
               decoration: BoxDecoration(

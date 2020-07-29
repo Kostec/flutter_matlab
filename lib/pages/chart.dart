@@ -59,7 +59,7 @@ class _ChartPageState extends State<ChartPage> {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = Menu();
+    var drawer = MainMenu.menu;
     var body = _buildBody();
 
     return Scaffold(
