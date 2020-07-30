@@ -30,9 +30,9 @@ abstract class Block {
 
   @override
   String toString() {
-    return 'Block';
+    return this.runtimeType.toString();
   }
-  
+
   void addInput(Block blockOut, int portIn, int portOut){
     var blockIn = this;
     if (blockIn.numIn < portIn || blockOut.numOut < portOut){

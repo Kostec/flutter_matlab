@@ -38,11 +38,6 @@ class TransferFcn extends Block{
   }
 
   @override
-  String toString() {
-    return numsToString();
-  }
-
-  @override
   List<String> getDisplay() {
     return [
       numsToString(),

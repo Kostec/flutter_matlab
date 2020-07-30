@@ -142,7 +142,7 @@ class _ModelPageState extends State<ModelPage>{
             return GestureDetector(
               onTap: (){
                 var count =  workspace.selectedMathModel.mathModel.blocks.where((element) => element.runtimeType == type).length;
-                block.name = '${block.name}_$count';
+                block.name = '${block.toString()}_$count';
                 workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: 20, y: 20, block: block));
                 scaffoldKey.currentState.setState(() {
                   this.setState(() { });
