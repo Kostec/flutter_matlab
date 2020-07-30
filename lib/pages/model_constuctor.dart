@@ -7,6 +7,7 @@ import 'package:fluttermatlab/models/Derivative.dart';
 import 'package:fluttermatlab/models/Integrator.dart';
 import 'package:fluttermatlab/models/MathModel.dart';
 import 'package:fluttermatlab/models/TransferFcn.dart';
+import 'package:fluttermatlab/services/Factory.dart';
 import 'package:fluttermatlab/services/library.dart';
 import 'package:fluttermatlab/services/modeling.dart';
 import 'package:fluttermatlab/services/workspace.dart';
@@ -141,9 +142,10 @@ class _ModelPageState extends State<ModelPage>{
             var type = block.runtimeType;
             return GestureDetector(
               onTap: (){
+                Factory factory = Factory();
                 var count =  workspace.selectedMathModel.mathModel.blocks.where((element) => element.runtimeType == type).length;
-                block.name = '${block.toString()}_$count';
-                workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: 20, y: 20, block: block));
+                var name = '${block.toString()}_$count';
+                workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: 20, y: 20, block: factory.CreateBlock(type, name)));
                 scaffoldKey.currentState.setState(() {
                   this.setState(() { });
                 });
