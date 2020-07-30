@@ -30,7 +30,7 @@ class _ModelPageState extends State<ModelPage>{
 
   List<Block> blocks = [];
 
-  List<BlockWidget> blockWidgets = [];
+  List<PositionedBlockWidget> blockWidgets = [];
 
   Map<String, Function> moreItems;
 
@@ -43,7 +43,7 @@ class _ModelPageState extends State<ModelPage>{
     double countY = 20;
 
     blocks.forEach((block) {
-      blockWidgets.add(BlockWidget(x: countX, y: countY, block: block));
+      blockWidgets.add(PositionedBlockWidget(x: countX, y: countY, block: block));
       countX += 150;
     });
 
@@ -127,7 +127,7 @@ class _ModelPageState extends State<ModelPage>{
   void addBlock(){
     var block = Constant(value: 10);
     blocks.add(block);
-    blockWidgets.add(BlockWidget(x: 20, y: 20, block: block));
+    blockWidgets.add(PositionedBlockWidget(x: 20, y: 20, block: block));
     setState(() {});
   }
 
@@ -148,7 +148,7 @@ class _ModelPageState extends State<ModelPage>{
                 itemCount: Library.blocks.length,
                 itemBuilder: (BuildContext context, int index){
                   var key = Library.blocks.keys.toList()[index];
-                  var widget = BlockWidget(x: 0, y: 0, block: Library.blocks[key]);
+                  var widget = PositionedBlockWidget(x: 0, y: 0, block: Library.blocks[key]);
                 }),
             margin: EdgeInsets.only(bottom: 50, left: 12, right: 12),
             padding: EdgeInsets.only(bottom: 12, top: 12, left: 12, right: 12),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/services/library.dart';
 import 'package:fluttermatlab/widgets/block.dart';
 import 'package:fluttermatlab/widgets/menu.dart';
@@ -38,27 +39,37 @@ class _BlockLibraryState extends State<BlockLibrary>{
   }
 
   Widget _buildBody(){
+    List<Widget> blocks = [];
+
+    Library.blocks.forEach((key, value) {
+
+      var widget = _buildBlock(key, value);
+      blocks.add(widget);
+    });
+
     return Container(
-      child: ListView.builder(
-        itemCount: Library.blocks.length,
-        itemBuilder: (context, index){
-          var key = Library.blocks.keys.toList()[index];
-          var block = Library.blocks[key];
-          var widget = BlockWidget(x: 0, y: 0, block: block, canOpenPreference: false,);
-          return ListTile(
-            subtitle: Container(
-              decoration: BoxDecoration(
-                color: Colors.blue.withAlpha(100),
-                borderRadius: new BorderRadius.all(new Radius.circular(20.0)),),
-              height: 100,
-              margin: EdgeInsets.all(5),
-              padding: EdgeInsets.all(10),
-              child: widget,
-            ),
-            onTap: () => print(key),
-          );
-        }),
+      child:
+        GridView.count(
+          crossAxisCount: 2,
+          children: blocks,
+        ),
     );
+  }
+
+  Widget _buildBlock(String key, Block value){
+    var block = Library.blocks[key];
+    var blockWidget = BlockWidget(block: block);
+    return
+    GestureDetector(
+      onTap: () {print('block ${key} was tapped');},
+      child: Container(
+        decoration: BoxDecoration(
+        color: Colors.blue.withAlpha(100),
+        borderRadius: new BorderRadius.all(new Radius.circular(20.0)),),
+        margin: EdgeInsets.all(5),
+        padding: EdgeInsets.all(10),
+        child: Center(child: blockWidget),
+    ),);
   }
 
 
