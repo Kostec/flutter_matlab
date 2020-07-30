@@ -33,7 +33,7 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
 
   double x; double y;
   double dx = 0, dy = 0;
-  bool canTransmit = false;
+  bool canTransmit = true;
 
   _PositionedBlockWidgetState({this.x, this.y, this.block});
 
@@ -144,7 +144,6 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
 class BlockWidget extends StatefulWidget{
   double x; double y;
   Block block;
-  bool canOpenPreference;
   BlockWidget({this.block});
 
   @override

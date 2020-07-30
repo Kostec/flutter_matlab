@@ -1,7 +1,9 @@
+import 'package:fluttermatlab/models/MathModel.dart';
+
 /// класс предназначен для хранения переменных рабочей среды программы
 class workspace{
   static Map<String, dynamic> variables = {};
-
+  static List<MathModel> mathModels = [];
   /// Очищает список переменных
   static clear(){
     variables.clear();
@@ -18,7 +20,6 @@ class workspace{
   static void removeVariable(String name){
     variables.remove(name);
   }
-
   /// Удаляет список переменных из рабочей области
   static void removeVariableRange(List<String> vars){
     vars.forEach((v){

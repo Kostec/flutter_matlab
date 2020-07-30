@@ -4,9 +4,11 @@ import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/Constant.dart';
 import 'package:fluttermatlab/models/Derivative.dart';
 import 'package:fluttermatlab/models/Integrator.dart';
+import 'package:fluttermatlab/models/MathModel.dart';
 import 'package:fluttermatlab/models/TransferFcn.dart';
 import 'package:fluttermatlab/services/library.dart';
 import 'package:fluttermatlab/services/modeling.dart';
+import 'package:fluttermatlab/services/workspace.dart';
 import 'package:fluttermatlab/widgets/block.dart';
 import 'package:fluttermatlab/widgets/menu.dart';
 import 'package:zoom_widget/zoom_widget.dart';
@@ -30,24 +32,29 @@ class _ModelPageState extends State<ModelPage>{
   double width = 2048;
   double heigh = 2048;
 
-  List<Block> blocks = [];
-
-  List<PositionedBlockWidget> blockWidgets = [];
+  ViewMathModel mathViewModel;
 
   Map<String, Function> moreItems;
 
+  MathModel selectedMathModel;
+
   @override
   void initState() {
+
+    mathViewModel = new ViewMathModel();
+
+    List<Block> blocks = [];
+
     blocks.add(new Constant(value: 3));
     blocks.add(new TransferFcn(nums: [1], dens: [1,1]));
     blocks.add(new Integrator(coef: 2.1));
     blocks.add(new Derivative());
-
     double countX = 20;
     double countY = 20;
 
+
     blocks.forEach((block) {
-      blockWidgets.add(PositionedBlockWidget(x: countX, y: countY, block: block));
+      mathViewModel.addBlockWidget(PositionedBlockWidget(x: countX, y: countY, block: block));
       countX += 150;
     });
 
@@ -108,7 +115,7 @@ class _ModelPageState extends State<ModelPage>{
         height: heigh,
         doubleTapZoom: true,
         enableScroll: true,
-        child: Stack(children: blockWidgets,),
+        child: Stack(children: mathViewModel.blockWidgets,),
     ));
 
   }
@@ -130,8 +137,7 @@ class _ModelPageState extends State<ModelPage>{
   }
   void addBlock(){
     var block = Constant(value: 10);
-    blocks.add(block);
-    blockWidgets.add(PositionedBlockWidget(x: 20, y: 20, block: block));
+    mathViewModel.addBlockWidget(PositionedBlockWidget(x: 20, y: 20, block: block));
     setState(() {});
   }
 
