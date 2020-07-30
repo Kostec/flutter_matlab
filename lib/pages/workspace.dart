@@ -101,12 +101,9 @@ class _WorkspacePageState extends State<WorkspacePage>{
 
   void editVariableValue(String key, String value){
     print('edit $key, $value');
-    try {
-      workspace.variables.remove(key);
-    } catch(e){
-      print('Не удалось удалить переменную');
-    }
-    workspace.variables[key] = double.parse(value);
+    Type type = workspace.variables[key].runtimeType;
+    workspace.variables.remove(key);
+    workspace.variables[key] = type == double ? double.parse(value) : value;
   }
 
   void loadWorkspace(){
