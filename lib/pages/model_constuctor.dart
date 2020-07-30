@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/Constant.dart';
+import 'package:fluttermatlab/models/Integrator.dart';
 import 'package:fluttermatlab/models/TransferFcn.dart';
 import 'package:fluttermatlab/services/library.dart';
 import 'package:fluttermatlab/services/modeling.dart';
@@ -38,6 +39,7 @@ class _ModelPageState extends State<ModelPage>{
   void initState() {
     blocks.add(new Constant(value: 3));
     blocks.add(new TransferFcn(nums: [1], dens: [1,1]));
+    blocks.add(new Integrator(coef: 2.1));
 
     double countX = 20;
     double countY = 20;

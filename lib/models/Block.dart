@@ -32,7 +32,7 @@ abstract class Block {
   String toString() {
     return 'Block';
   }
-
+  
   void addInput(Block blockOut, int portIn, int portOut){
     var blockIn = this;
     if (blockIn.numIn < portIn || blockOut.numOut < portOut){
@@ -96,7 +96,6 @@ abstract class Block {
   }
 
   void setPreference(Map<String, dynamic> preference){
-
   }
 
   List<String> getDisplay() {

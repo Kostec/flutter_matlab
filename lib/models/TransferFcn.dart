@@ -79,8 +79,8 @@ class TransferFcn extends Block{
   List<double> evaluate(double T) {
     print('Evaluate TransferFcn');
     super.evaluate(T);
-    var _out = IO.firstWhere((io) => io.type == IOtype.input)?.value;
-    var _in = IO.firstWhere((io) => io.type == IOtype.output)?.value;
+    var _in = IO.firstWhere((io) => io.type == IOtype.input)?.value;
+    var _out = IO.firstWhere((io) => io.type == IOtype.output)?.value;
     if (_in == null || _out == null) return [0];
     double up = 0;
     double down = 0;
