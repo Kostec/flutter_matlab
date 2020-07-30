@@ -42,17 +42,15 @@ class _BlockLibraryState extends State<BlockLibrary>{
     List<Widget> blocks = [];
 
     Library.blocks.forEach((key, value) {
-
       var widget = _buildBlock(key, value);
       blocks.add(widget);
     });
 
     return Container(
-      child:
-        GridView.count(
-          crossAxisCount: 2,
-          children: blocks,
-        ),
+      child: GridView.count(
+        crossAxisCount: 2,
+        children: blocks,
+      ),
     );
   }
 
@@ -71,6 +69,4 @@ class _BlockLibraryState extends State<BlockLibrary>{
         child: Center(child: blockWidget),
     ),);
   }
-
-
 }

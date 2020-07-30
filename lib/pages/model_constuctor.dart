@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/Constant.dart';
 import 'package:fluttermatlab/models/Derivative.dart';
@@ -27,6 +28,9 @@ class ModelPage extends StatefulWidget{
 }
 
 class _ModelPageState extends State<ModelPage>{
+
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   Path path;
   Paint paint;
   Canvas canvas;
@@ -38,11 +42,12 @@ class _ModelPageState extends State<ModelPage>{
 
   @override
   void initState() {
-    if (workspace.selectedMathModel == null) createTestModel();
+    workspace.selectedMathModel = workspace.selectedMathModel ?? createTestModel();
   }
 
-  void createTestModel(){
-    workspace.selectedMathModel = new ViewMathModel();
+  ViewMathModel createTestModel(){
+    ViewMathModel model = new ViewMathModel();
+    model = new ViewMathModel();
     List<Block> blocks = [];
 
     blocks.add(new Constant(value: 3));
@@ -57,6 +62,7 @@ class _ModelPageState extends State<ModelPage>{
       workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: countX, y: countY, block: block));
       countX += 150;
     });
+    return model;
   }
 
   @override
@@ -67,13 +73,16 @@ class _ModelPageState extends State<ModelPage>{
     return PageView(
       children: [
         Scaffold(
+          key: scaffoldKey,
           drawer: drawer,
           appBar: appBar,
           body: body,
           floatingActionButton: FloatingActionButton(
-            onPressed: null,
             tooltip: 'Increment',
             child: Icon(Icons.add),
+            onPressed: (){
+              scaffoldKey.currentState.showBottomSheet((context) => Container(height: 200, child: Text('Text'),));
+            },
           ),
     )]);
   }
@@ -118,6 +127,38 @@ class _ModelPageState extends State<ModelPage>{
 
   }
 
+  void showAddBlockDialog(BuildContext context) {
+    scaffoldKey.currentState.showBottomSheet((context){
+      return Container(
+        height: 200,
+        child: ListView.builder(
+          itemCount: Library.blocks.length,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index){
+            var key = Library.blocks.keys.toList()[index];
+            var block = Library.blocks[key];
+            var widget = BlockWidget(block: block);
+            var type = block.runtimeType;
+            return GestureDetector(
+              onTap: (){
+                var count =  workspace.selectedMathModel.mathModel.blocks.where((element) => element.runtimeType == type).length;
+                block.name = '${block.name}_$count';
+                workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: 20, y: 20, block: block));
+                scaffoldKey.currentState.setState(() {
+                  this.setState(() { });
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.all(5),
+                margin: EdgeInsets.all(5),
+                child: widget,
+            ));
+          },
+        )
+      );
+    });
+  }
+
   void exit(){
     print('Вы выходите из приложения');
   }
@@ -136,45 +177,9 @@ class _ModelPageState extends State<ModelPage>{
     setState((){});
   }
   void addBlock(){
-    var block = Constant(value: 10);
-    workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: 20, y: 20, block: block));
+//    var block = Constant(value: 10);
+//    workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: 20, y: 20, block: block));
+    showAddBlockDialog(context);
     setState(() {});
-  }
-
-
-  void showDialog(BuildContext context) {
-    showGeneralDialog(
-      barrierLabel: "Barrier",
-      barrierDismissible: true,
-      barrierColor: Colors.black.withOpacity(0.5),
-      transitionDuration: Duration(milliseconds: 700),
-      context: context,
-      pageBuilder: (_, __, ___) {
-        return Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            height: 200,
-            child: ListView.builder(
-                itemCount: Library.blocks.length,
-                itemBuilder: (BuildContext context, int index){
-                  var key = Library.blocks.keys.toList()[index];
-                  var widget = PositionedBlockWidget(x: 0, y: 0, block: Library.blocks[key]);
-                }),
-            margin: EdgeInsets.only(bottom: 50, left: 12, right: 12),
-            padding: EdgeInsets.only(bottom: 12, top: 12, left: 12, right: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(40),
-            ),
-          ),
-        );
-      },
-      transitionBuilder: (_, anim, __, child) {
-        return SlideTransition(
-          position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim),
-          child: child,
-        );
-      },
-    );
   }
 }

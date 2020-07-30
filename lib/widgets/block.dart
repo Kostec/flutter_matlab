@@ -20,7 +20,6 @@ class PositionedBlockWidget extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _PositionedBlockWidgetState(x: x, y: y, block: block);
   }
 
@@ -147,7 +146,6 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
 }
 
 class BlockWidget extends StatefulWidget{
-  double x; double y;
   Block block;
   BlockWidget({this.block});
 
