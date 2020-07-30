@@ -1,6 +1,7 @@
 
 import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/Constant.dart';
+import 'package:fluttermatlab/models/Derivative.dart';
 import 'package:fluttermatlab/models/TransferFcn.dart';
 import 'package:fluttermatlab/models/Integrator.dart';
 
@@ -10,6 +11,7 @@ class Library
     'Constant' : new Constant(value: 1),
     'Transfer' : new TransferFcn(nums: [1], dens: [1, 1]),
     'Integrator': new Integrator(coef: 1),
+    'Derivative': new Derivative(),
     'Constant1' : new Constant(value: 2),
     'Transfer1' : new TransferFcn(nums: [2], dens: [1, 1]),
     'Constant2' : new Constant(value: 2),

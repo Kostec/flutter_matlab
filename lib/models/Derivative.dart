@@ -1,28 +1,23 @@
-import 'package:flutter/cupertino.dart';
 import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/BlockIO.dart';
 
-class Integrator extends Block{
-  double coef;
-  double initValue;
+class Derivative extends Block{
   String name;
   int numOut = 1;
   int numIn = 1;
 
   double previousValue;
 
-  Integrator({@required this.coef, this.initValue = 0, this.name = 'Integrator'}){
-    previousValue = initValue;
-  }
+  Derivative({this.name = 'Derivative'});
 
   @override
   List<String> getDisplay() {
-    return [coef.toString(), 's'];
+    return ['d', 'dt'];
   }
 
   @override
   Map<String, dynamic> getPreference() {
-    return {'coef': coef, 'initValue': initValue};
+    return {'name': name};
   }
 
   @override
@@ -31,8 +26,7 @@ class Integrator extends Block{
     super.evaluate(T);
     var _in = IO.firstWhere((io) => io.type == IOtype.input)?.value;
     var _out = IO.firstWhere((io) => io.type == IOtype.output)?.value;
-    if (state.length == 0) _out = initValue;
-    _out += (_in - previousValue) * T;
+    _out += (_in - previousValue) / T;
     previousValue = _in;
     state.addEntries([new MapEntry(time, [_out])]);
     return [_out];
@@ -40,8 +34,6 @@ class Integrator extends Block{
 
   @override
   void setPreference(Map<String, dynamic> preference) {
-    coef = preference['name'] == null ? coef : double.parse(preference['name']);
-    coef = preference['coef'] == null ? coef : double.parse(preference['coef']);
-    initValue = preference['initValue'] == null ? initValue : double.parse(preference['initValue']);
+    name = preference['name'];
   }
 }
