@@ -3,7 +3,7 @@ import 'package:fluttermatlab/models/MathModel.dart';
 /// класс предназначен для хранения переменных рабочей среды программы
 class workspace{
   static Map<String, dynamic> variables = {};
-  static List<MathModel> mathModels = [];
+  static ViewMathModel selectedMathModel = ViewMathModel();
   /// Очищает список переменных
   static clear(){
     variables.clear();

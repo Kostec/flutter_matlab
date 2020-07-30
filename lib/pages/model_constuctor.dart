@@ -14,9 +14,11 @@ import 'package:fluttermatlab/widgets/menu.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 
 class ModelPage extends StatefulWidget{
+  _ModelPageState _instance;
   @override
   State createState() {
-    return _ModelPageState();
+    if (_instance == null) _instance = _ModelPageState();
+    return _instance;
   }
 
   static void OpenPage(BuildContext context) async{
@@ -32,17 +34,15 @@ class _ModelPageState extends State<ModelPage>{
   double width = 2048;
   double heigh = 2048;
 
-  ViewMathModel mathViewModel;
-
   Map<String, Function> moreItems;
-
-  MathModel selectedMathModel;
 
   @override
   void initState() {
+    if (workspace.selectedMathModel == null) createTestModel();
+  }
 
-    mathViewModel = new ViewMathModel();
-
+  void createTestModel(){
+    workspace.selectedMathModel = new ViewMathModel();
     List<Block> blocks = [];
 
     blocks.add(new Constant(value: 3));
@@ -54,11 +54,9 @@ class _ModelPageState extends State<ModelPage>{
 
 
     blocks.forEach((block) {
-      mathViewModel.addBlockWidget(PositionedBlockWidget(x: countX, y: countY, block: block));
+      workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: countX, y: countY, block: block));
       countX += 150;
     });
-
-    Solver solver = new Solver();
   }
 
   @override
@@ -115,7 +113,7 @@ class _ModelPageState extends State<ModelPage>{
         height: heigh,
         doubleTapZoom: true,
         enableScroll: true,
-        child: Stack(children: mathViewModel.blockWidgets,),
+        child: Stack(children: workspace.selectedMathModel.blockWidgets,),
     ));
 
   }
@@ -134,10 +132,12 @@ class _ModelPageState extends State<ModelPage>{
   }
   void newModel(){
     print('Создать новую модель');
+    workspace.selectedMathModel = new ViewMathModel();
+    setState((){});
   }
   void addBlock(){
     var block = Constant(value: 10);
-    mathViewModel.addBlockWidget(PositionedBlockWidget(x: 20, y: 20, block: block));
+    workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: 20, y: 20, block: block));
     setState(() {});
   }
 

@@ -81,9 +81,14 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
     this.dy = dy;
 
     setState(() {
+      widget.x = this.x;
+      widget.y = this.y;
     });
   }
   void endTransmitting(){
+    this.dx = 0;
+    this.dy = 0;
+    setState(() { });
   }
 
   void showDialog(BuildContext context) {
