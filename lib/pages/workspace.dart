@@ -87,13 +87,27 @@ class _WorkspacePageState extends State<WorkspacePage>{
     TextInputType textType = valueType == int || valueType == double ?  TextInputType.number : TextInputType.text;
     return DataRow(
       cells: [
-        DataCell(TextFormField(initialValue: '$key', keyboardType: TextInputType.text, onFieldSubmitted: (val){print('onSubmited $key $val');}), showEditIcon: true),
-        DataCell(TextFormField(initialValue: '$value', keyboardType: textType, onFieldSubmitted: (val){print('onSubmited $key $val');},), showEditIcon: true),
+        DataCell(TextFormField(initialValue: '$key', keyboardType: TextInputType.text, onFieldSubmitted: (val){ editVariableName(key, val);}), showEditIcon: true),
+        DataCell(TextFormField(initialValue: '$value', keyboardType: textType, onFieldSubmitted: (val){ editVariableValue(key, val);}), showEditIcon: true),
         DataCell(Text('${value.runtimeType.toString()}')),
       ],
     );
   }
 
+  void editVariableName(String key, String value){
+    _workspace.remove(key);
+    _workspace[value] = _workspace[key];
+  }
+
+  void editVariableValue(String key, String value){
+    print('edit $key, $value');
+    try {
+      workspace.variables.remove(key);
+    } catch(e){
+      print('Не удалось удалить переменную');
+    }
+    workspace.variables[key] = double.parse(value);
+  }
 
   void loadWorkspace(){
     _workspace = workspace.variables;
