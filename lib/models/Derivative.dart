@@ -2,8 +2,11 @@ import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/BlockIO.dart';
 
 class Derivative extends Block{
+  @override
   String name;
+  @override
   int numOut = 1;
+  @override
   int numIn = 1;
 
   double previousValue;

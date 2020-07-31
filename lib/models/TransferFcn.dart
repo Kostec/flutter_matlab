@@ -2,10 +2,13 @@ import 'Block.dart';
 import 'BlockIO.dart';
 
 class TransferFcn extends Block{
+  @override
   int numOut = 1;
+  @override
   int numIn = 1;
   List<double> nums = [1];
   List<double> dens = [1,1];
+  @override
   String name;
 
   TransferFcn({this.nums, this.dens, this.name = 'TransferFcn'}){

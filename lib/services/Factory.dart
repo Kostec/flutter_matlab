@@ -2,6 +2,7 @@ import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/Constant.dart';
 import 'package:fluttermatlab/models/Derivative.dart';
 import 'package:fluttermatlab/models/Integrator.dart';
+import 'package:fluttermatlab/models/Sum.dart';
 import 'package:fluttermatlab/models/TransferFcn.dart';
 
 class Factory{
@@ -12,6 +13,7 @@ class Factory{
       case TransferFcn: block = TransferFcn(nums: [1], dens: [1,1],name: name); break;
       case Derivative: block = Derivative(name: name); break;
       case Integrator: block = Integrator(coef: 1, name: name); break;
+      case Sum: block = Sum(); break;
     }
     return block;
   }

@@ -162,7 +162,6 @@ class _BlockWidgetState extends State<BlockWidget>{
   Block block;
   _BlockWidgetState({this.block});
 
-  double width, height;
   Color border_color = Colors.black;
   Border border;
   BoxDecoration decoration;
@@ -173,8 +172,7 @@ class _BlockWidgetState extends State<BlockWidget>{
 
   @override
   void initState() {
-    width = 120;
-    height = 60;
+
   }
   @override
   Widget build(BuildContext context) {
@@ -191,9 +189,9 @@ class _BlockWidgetState extends State<BlockWidget>{
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Column(children: inputs),
+                Wrap(children: inputs, direction: Axis.vertical, spacing: 10,),
                 Container(child: displayWidget,),
-                Column(children: outputs),
+                Wrap(children: outputs, direction: Axis.vertical,),
               ]),
           Text('${block.name}'),
         ]));
@@ -203,9 +201,11 @@ class _BlockWidgetState extends State<BlockWidget>{
     inputs.clear();
     for (int i = 0; i < block.numIn; i++){
       inputs.add(Container(
-        width: 10,
-        height: 20,
+//        margin: EdgeInsets.only(top: heightCompens / 2, bottom: heightCompens / 2),
+        width: 15,
+        height: 15,
         decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
+        child: Center(child: Text('${i+1}')),
       ),);
     }
   }
@@ -213,25 +213,25 @@ class _BlockWidgetState extends State<BlockWidget>{
     outputs.clear();
     for (int i = 0; i < block.numOut; i++){
       outputs.add(Container(
-        width: 10,
-        height: 20,
+        width: 15,
+        height: 15,
         decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
+        child: Center(child: Text('${i+1}')),
       ),);
     }
   }
   void buildDisplay(){
     getDisplay();
     displayWidget = Container(
-        decoration: BoxDecoration(border: Border.all(color: border_color)),
-        width: width, height: height,
-        child: Align(
-          alignment: Alignment.center,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: display,
-          ),
-        )
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(border: Border.all(color: border_color)),
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          direction: Axis.vertical,
+          spacing: 10,
+          children: display,
+        ),
     );
   }
   void getDisplay(){
@@ -239,7 +239,7 @@ class _BlockWidgetState extends State<BlockWidget>{
     var toDisplay = block.getDisplay();
     for (int i = 0; i < toDisplay.length; i++){
       display.add(Text(toDisplay[i]));
-      if (toDisplay.length - i > 1) display.add(Divider(color: Colors.black,));
+//      if (toDisplay.length - i > 1) display.add(Divider(color: Colors.black,));
     }
   }
 }

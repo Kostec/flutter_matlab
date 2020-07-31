@@ -2,6 +2,7 @@
 import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/Constant.dart';
 import 'package:fluttermatlab/models/Derivative.dart';
+import 'package:fluttermatlab/models/Sum.dart';
 import 'package:fluttermatlab/models/TransferFcn.dart';
 import 'package:fluttermatlab/models/Integrator.dart';
 
@@ -12,6 +13,7 @@ class Library
       'Transfer': new TransferFcn(nums: [1], dens: [1, 1]),
       'Integrator': new Integrator(coef: 1),
       'Derivative': new Derivative(),
+      'Sum': new Sum(numIn: 2),
   };
 
   static Map<String, dynamic> constants = {

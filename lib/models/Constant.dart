@@ -2,7 +2,9 @@ import 'package:fluttermatlab/models/Block.dart';
 
 class Constant extends Block{
   double value = 1;
+  @override
   int numOut = 1;
+  @override
   String name;
   Constant({this.value = 1, this.name = "Constant"});
 
@@ -15,7 +17,7 @@ class Constant extends Block{
 
   @override
   List<String> getDisplay() {
-    return [toString()];
+    return ['$value'];
   }
 
   @override

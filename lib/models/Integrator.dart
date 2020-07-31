@@ -5,8 +5,11 @@ import 'package:fluttermatlab/models/BlockIO.dart';
 class Integrator extends Block{
   double coef;
   double initValue;
+  @override
   String name;
+  @override
   int numOut = 1;
+  @override
   int numIn = 1;
 
   double previousValue;
