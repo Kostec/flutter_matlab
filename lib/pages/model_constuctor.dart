@@ -102,6 +102,10 @@ class _ModelPageState extends State<ModelPage>{
     return AppBar(
       title: Text('Model'),
       actions: [
+        IconButton(
+          icon: Icon(Icons.refresh),
+          onPressed: (){setState((){});},
+        ),
         PopupMenuButton(
           onSelected: (value) => {moreItems[value]()},
           itemBuilder: (BuildContext context) {
@@ -174,8 +178,14 @@ class _ModelPageState extends State<ModelPage>{
     workspace.selectedMathModel.addBlockCallback.remove(BlockWasAdded);
   }
 
-  void BlockWasRemoved(PositionedBlockWidget blockWidget){ setState(() { }); }
-  void BlockWasAdded(PositionedBlockWidget blockWidget){ setState(() { }); }
+  void BlockWasRemoved(PositionedBlockWidget blockWidget){
+    print('main remove block');
+    setState(() { });
+  }
+  void BlockWasAdded(PositionedBlockWidget blockWidget){
+    print('main add block');
+    setState(() { });
+  }
 
   void exit(){
     print('Вы выходите из приложения');
@@ -191,7 +201,9 @@ class _ModelPageState extends State<ModelPage>{
   }
   void newModel(){
     print('Создать новую модель');
+    RemoveEvents();
     workspace.selectedMathModel = new ViewMathModel();
+    addEvents();
     setState((){});
   }
   void addBlock(){

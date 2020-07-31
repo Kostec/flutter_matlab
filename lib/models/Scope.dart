@@ -40,7 +40,8 @@ class Scope extends Block{
   List<double> evaluate(double T) {
     var _in = Inputs;
     for(int i = 0; i < _in.length; i++){
-      stateInputs[i] = _in[i].blockOut.state.values.cast<double>().toList();
+      //TODO
+//      stateInputs[i] = _in[i].connectedTo.state.values.cast<double>().toList();
     }
   }
 }

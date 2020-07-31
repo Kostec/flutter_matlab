@@ -21,13 +21,13 @@ class Solver{
   /// Выполняет полное решение системы
   void evaluate(List<Block> blocks)
   {
-    var inputs = blocks.where((element) => element.Outputs == null).toList();
-    inputs.forEach((element) {
-      element.IO.forEach((port) {
-        port.Input.value = port.value;
-        if (port.blockIn.numIn == 1) port.blockIn.evaluate(T);
-      });
-    });
+//    var inputs = blocks.where((element) => element.Outputs == null).toList();
+//    inputs.forEach((element) {
+//      element.IO.forEach((port) {
+//        port.Input.value = port.value;
+//        if (port.blockIn.numIn == 1) port.blockIn.evaluate(T);
+//      });
+//    });
   }
 
   ///Останавливает моделирование TODO

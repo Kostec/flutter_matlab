@@ -1,5 +1,7 @@
 import 'package:fluttermatlab/models/Block.dart';
 
+import 'BlockIO.dart';
+
 class Sum extends Block{
 
   @override
@@ -13,6 +15,15 @@ class Sum extends Block{
   Sum({this.numIn = 2, this.name = 'Sum'}){
     _setOperators();
     setDefaultIO();
+  }
+
+  @override
+  void setDefaultIO(){
+    IO.clear();
+    for(int i = 0; i < operators.length; i++){
+      IO.add(PortInput(num: i, name: operators[i]));
+    }
+    IO.add(PortOutput(num: 0,));
   }
 
   void _setOperators(){
@@ -65,5 +76,6 @@ class Sum extends Block{
     name = preference['name'];
     operators = preference['operators'];
     numIn = operators.length;
+    setDefaultIO();
   }
 }

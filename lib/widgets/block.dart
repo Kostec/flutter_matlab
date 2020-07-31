@@ -197,11 +197,11 @@ class _BlockWidgetState extends State<BlockWidget>{
                 child: Wrap(
                   direction: Axis.horizontal,
                   crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      Wrap(children: inputNames, direction: Axis.vertical, spacing: 5,),
-                      Container(child: displayWidget,),
-                      Wrap(children: outputNames, direction: Axis.vertical, spacing: 5,),
-                    ]
+                  children: [
+                    Wrap(children: inputNames, direction: Axis.vertical, spacing: 7,),
+                    Container(child: displayWidget,),
+                    Wrap(children: outputNames, direction: Axis.vertical, spacing: 7,),
+                  ]
                 ),),
               Wrap(children: outputs, direction: Axis.vertical,),
               ]
@@ -217,8 +217,8 @@ class _BlockWidgetState extends State<BlockWidget>{
     for (int i = 0; i < block.numIn; i++){
       inputs.add(Container(
         padding: EdgeInsets.all(2),
-        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-        child: Center(child: Text('${_inputs[i].numIn}')),
+        decoration: BoxDecoration(border: Border.all(color: Colors.black), color: Colors.white),
+        child: Center(child: Text('${_inputs[i].num}')),
       ),);
       inputNames.add(Container(
         padding: EdgeInsets.all(2),
@@ -233,8 +233,8 @@ class _BlockWidgetState extends State<BlockWidget>{
     for (int i = 0; i < block.numOut; i++){
       outputs.add(Container(
         padding: EdgeInsets.all(2),
-        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-        child: Center(child: Text('${_outputs[i].numOut}')),
+        decoration: BoxDecoration(border: Border.all(color: Colors.black), color: Colors.white),
+        child: Center(child: Text('${_outputs[i].num}')),
       ),);
       outputNames.add(Container(
         padding: EdgeInsets.all(2),

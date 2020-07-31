@@ -18,13 +18,13 @@ class MathModel{
     blocks.add(block);
   }
   void removeBlock(Block block){
-    block.Inputs.forEach((input) {
-      block.removeInput(input);
-    });
-
-    block.Outputs.forEach((output) {
-      block.removeInput(output);
-    });
+//    block.Inputs.forEach((input) {
+//      block.removeInput(input);
+//    });
+//
+//    block.Outputs.forEach((output) {
+//      block.removeInput(output);
+//    });
     blocks.remove(block);
     print('was removed ${block.name}');
   }
