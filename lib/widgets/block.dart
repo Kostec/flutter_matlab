@@ -169,6 +169,7 @@ class _BlockWidgetState extends State<BlockWidget>{
   List<Widget> inputs = [];
   List<Widget> outputs = [];
   List<Widget> inputNames = [];
+  List<Widget> outputNames = [];
   Widget displayWidget;
 
   @override
@@ -197,7 +198,9 @@ class _BlockWidgetState extends State<BlockWidget>{
                   direction: Axis.horizontal,
                   crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
+                      Wrap(children: inputNames, direction: Axis.vertical, spacing: 5,),
                       Container(child: displayWidget,),
+                      Wrap(children: outputNames, direction: Axis.vertical, spacing: 5,),
                     ]
                 ),),
               Wrap(children: outputs, direction: Axis.vertical,),
@@ -207,37 +210,35 @@ class _BlockWidgetState extends State<BlockWidget>{
         ]));
   }
 
-  void buildInputNames(){
-    inputNames.clear();
-    for (int i = 0; i < block.numIn; i++){
-      inputNames.add(Container(
-        padding: EdgeInsets.all(2),
-//        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
-        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-        child: Center(child: Text('${i+1}')),
-      ),);
-    }
-  }
-
   void buildInputs(){
+    var _inputs = block.Inputs;
     inputs.clear();
+    inputNames.clear();
     for (int i = 0; i < block.numIn; i++){
       inputs.add(Container(
         padding: EdgeInsets.all(2),
-//        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
         decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-        child: Center(child: Text('${i+1}')),
+        child: Center(child: Text('${_inputs[i].numIn}')),
+      ),);
+      inputNames.add(Container(
+        padding: EdgeInsets.all(2),
+        child: Center(child: Text('${_inputs[i].name}')),
       ),);
     }
   }
   void buildOutputs(){
+    var _outputs = block.Outputs;
     outputs.clear();
+    outputNames.clear();
     for (int i = 0; i < block.numOut; i++){
       outputs.add(Container(
         padding: EdgeInsets.all(2),
-//        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
         decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-        child: Center(child: Text('${i+1}')),
+        child: Center(child: Text('${_outputs[i].numOut}')),
+      ),);
+      outputNames.add(Container(
+        padding: EdgeInsets.all(2),
+        child: Center(child: Text('${_outputs[i].name}')),
       ),);
     }
   }

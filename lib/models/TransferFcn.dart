@@ -12,7 +12,7 @@ class TransferFcn extends Block{
   String name;
 
   TransferFcn({this.nums, this.dens, this.name = 'TransferFcn'}){
-
+    setDefaultIO();
   }
 
   String arrayToString(List<double> nums){

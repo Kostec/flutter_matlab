@@ -16,6 +16,7 @@ class Integrator extends Block{
 
   Integrator({@required this.coef, this.initValue = 0, this.name = 'Integrator'}){
     previousValue = initValue;
+    setDefaultIO();
   }
 
   @override

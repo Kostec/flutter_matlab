@@ -6,7 +6,9 @@ class Constant extends Block{
   int numOut = 1;
   @override
   String name;
-  Constant({this.value = 1, this.name = "Constant"});
+  Constant({this.value = 1, this.name = "Constant"}){
+    setDefaultIO();
+  }
 
   @override
   List<double> evaluate(double T) {

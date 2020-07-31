@@ -14,6 +14,7 @@ class Scope extends Block{
     for(int i = 0; i < numIn; i++){
       stateInputs[i] = [];
     }
+    setDefaultIO();
   }
 
 

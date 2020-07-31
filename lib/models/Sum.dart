@@ -12,6 +12,7 @@ class Sum extends Block{
   String name;
   Sum({this.numIn = 2, this.name = 'Sum'}){
     _setOperators();
+    setDefaultIO();
   }
 
   void _setOperators(){

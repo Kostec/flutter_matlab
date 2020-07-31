@@ -11,7 +11,9 @@ class Derivative extends Block{
 
   double previousValue;
 
-  Derivative({this.name = 'Derivative'});
+  Derivative({this.name = 'Derivative'}){
+    setDefaultIO();
+  }
 
   @override
   List<String> getDisplay() {
