@@ -215,11 +215,7 @@ class _BlockWidgetState extends State<BlockWidget>{
     inputs.clear();
     inputNames.clear();
     for (int i = 0; i < block.numIn; i++){
-      inputs.add(Container(
-        padding: EdgeInsets.all(2),
-        decoration: BoxDecoration(border: Border.all(color: Colors.black), color: Colors.white),
-        child: Center(child: Text('${_inputs[i].num}')),
-      ),);
+      inputs.add(IOWidget(_inputs[i]));
       inputNames.add(Container(
         padding: EdgeInsets.all(2),
         child: Center(child: Text('${_inputs[i].name}')),
@@ -231,11 +227,7 @@ class _BlockWidgetState extends State<BlockWidget>{
     outputs.clear();
     outputNames.clear();
     for (int i = 0; i < block.numOut; i++){
-      outputs.add(Container(
-        padding: EdgeInsets.all(2),
-        decoration: BoxDecoration(border: Border.all(color: Colors.black), color: Colors.white),
-        child: Center(child: Text('${_outputs[i].num}')),
-      ),);
+      outputs.add(IOWidget(_outputs[i]));
       outputNames.add(Container(
         padding: EdgeInsets.all(2),
         child: Center(child: Text('${_outputs[i].name}')),
