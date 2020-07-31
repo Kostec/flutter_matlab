@@ -66,6 +66,8 @@ class _ModelPageState extends State<ModelPage>{
     double countX = 20;
     double countY = 20;
 
+    (constant.Outputs[0] as PortOutput).connect(transfer.Inputs[0]);
+
 
     blocks.forEach((block) {
       workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: countX, y: countY, block: block));
@@ -130,10 +132,12 @@ class _ModelPageState extends State<ModelPage>{
 
   Widget _buildBody(){
 
-    List<PositionedBlockWidget> child = [];
+    List<Widget> child = [];
     workspace.selectedMathModel.blockWidgets.forEach((element) {
       child.add(element);
+      child.add(Positioned(top: element.y, left: element.x,child: CustomPaint(size: Size(0,0), painter: MyPainter(0, 0, -100, 0),)));
     });
+
     return GestureDetector(
       onTapDown: (details) => print('OnTap'),
       child: Zoom(
@@ -223,5 +227,30 @@ class _ModelPageState extends State<ModelPage>{
   void dispose() {
     print('dispose');
     RemoveEvents();
+  }
+}
+
+class MyPainter extends CustomPainter { //         <-- CustomPainter class
+
+  double start_x;
+  double start_y;
+  double end_x;
+  double end_y;
+  MyPainter(this.start_x, this.start_y, this.end_x, this.end_y);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    //                                             <-- Insert your painting code here.
+    final p1 = Offset(0, 0);
+    final p2 = Offset(40, 0);
+    final paint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 4;
+    canvas.drawLine(p1, p2, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter old) {
+    return false;
   }
 }
