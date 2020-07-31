@@ -14,11 +14,6 @@ class Constant extends Block{
   }
 
   @override
-  String toString() {
-    return value.toString();
-  }
-
-  @override
   List<String> getDisplay() {
     return [toString()];
   }

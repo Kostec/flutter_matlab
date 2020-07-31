@@ -10,6 +10,7 @@ import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/BlockIO.dart';
 import 'package:fluttermatlab/models/TransferFcn.dart';
 import 'package:fluttermatlab/pages/block-preference.dart';
+import 'package:fluttermatlab/services/workspace.dart';
 import 'package:fluttermatlab/widgets/io.dart';
 
 class PositionedBlockWidget extends StatefulWidget{
@@ -26,8 +27,6 @@ class PositionedBlockWidget extends StatefulWidget{
 }
 
 class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
-
-  final GlobalKey<ScaffoldState> _scaggoldKey = GlobalKey<ScaffoldState>();
   Block block;
 
   double x; double y;
@@ -45,6 +44,7 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
       'Перенос' : transmitSwitch,
       'Подключить' : connectIt,
       'Параметры' : openPreference,
+      'Удалить': remove,
     };
   }
 
@@ -62,7 +62,6 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
       )
     );
   }
-
   void startTransmitting(double dx, double dy){
     if (canTransmit)
       setState(() {
@@ -142,6 +141,10 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
   }
   void connectIt() {
     print('connect');
+  }
+  void remove(){
+    workspace.selectedMathModel.removeBlock(block);
+    Navigator.of(context).pop();
   }
 }
 

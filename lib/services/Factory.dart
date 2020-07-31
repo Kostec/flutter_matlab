@@ -11,7 +11,7 @@ class Factory{
       case Constant: block = Constant(name: name); break;
       case TransferFcn: block = TransferFcn(nums: [1], dens: [1,1],name: name); break;
       case Derivative: block = Derivative(name: name); break;
-      case Integrator: block = Integrator(name: name); break;
+      case Integrator: block = Integrator(coef: 1, name: name); break;
     }
     return block;
   }

@@ -44,6 +44,7 @@ class _ModelPageState extends State<ModelPage>{
   @override
   void initState() {
     workspace.selectedMathModel = workspace.selectedMathModel ?? createTestModel();
+    addEvents();
   }
 
   ViewMathModel createTestModel(){
@@ -68,21 +69,22 @@ class _ModelPageState extends State<ModelPage>{
 
   @override
   Widget build(BuildContext context) {
-    var drawer = MainMenu.menu;
-    var appBar = _buildAppBar();
-    var body = _buildBody();
+    var _drawer = MainMenu.menu;
+    var _appBar = _buildAppBar();
+    var _body = _buildBody();
     return PageView(
       children: [
         Scaffold(
           key: scaffoldKey,
-          drawer: drawer,
-          appBar: appBar,
-          body: body,
+          drawer: _drawer,
+          appBar: _appBar,
+          body: _body,
           floatingActionButton: FloatingActionButton(
             tooltip: 'Increment',
             child: Icon(Icons.add),
             onPressed: (){
-              scaffoldKey.currentState.showBottomSheet((context) => Container(height: 200, child: Text('Text'),));
+              addBlock();
+//              scaffoldKey.currentState.showBottomSheet((context) => Container(height: 200, child: Text('Text'),));
             },
           ),
     )]);
@@ -116,6 +118,11 @@ class _ModelPageState extends State<ModelPage>{
   }
 
   Widget _buildBody(){
+
+    List<PositionedBlockWidget> child = [];
+    workspace.selectedMathModel.blockWidgets.forEach((element) {
+      child.add(element);
+    });
     return GestureDetector(
       onTapDown: (details) => print('OnTap'),
       child: Zoom(
@@ -123,9 +130,8 @@ class _ModelPageState extends State<ModelPage>{
         height: heigh,
         doubleTapZoom: true,
         enableScroll: true,
-        child: Stack(children: workspace.selectedMathModel.blockWidgets,),
+        child: Stack(children: child,),
     ));
-
   }
 
   void showAddBlockDialog(BuildContext context) {
@@ -146,9 +152,6 @@ class _ModelPageState extends State<ModelPage>{
                 var count =  workspace.selectedMathModel.mathModel.blocks.where((element) => element.runtimeType == type).length;
                 var name = '${block.toString()}_$count';
                 workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: 20, y: 20, block: factory.CreateBlock(type, name)));
-                scaffoldKey.currentState.setState(() {
-                  this.setState(() { });
-                });
               },
               child: Container(
                 padding: EdgeInsets.all(5),
@@ -160,6 +163,19 @@ class _ModelPageState extends State<ModelPage>{
       );
     });
   }
+
+  void addEvents(){
+    workspace.selectedMathModel.removeBlockCallback.add(BlockWasRemoved);
+    workspace.selectedMathModel.addBlockCallback.add(BlockWasAdded);
+  }
+
+  void RemoveEvents(){
+    workspace.selectedMathModel.removeBlockCallback.remove(BlockWasRemoved);
+    workspace.selectedMathModel.addBlockCallback.remove(BlockWasAdded);
+  }
+
+  void BlockWasRemoved(PositionedBlockWidget blockWidget){ setState(() { }); }
+  void BlockWasAdded(PositionedBlockWidget blockWidget){ setState(() { }); }
 
   void exit(){
     print('Вы выходите из приложения');
@@ -179,9 +195,13 @@ class _ModelPageState extends State<ModelPage>{
     setState((){});
   }
   void addBlock(){
-//    var block = Constant(value: 10);
-//    workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: 20, y: 20, block: block));
     showAddBlockDialog(context);
     setState(() {});
+  }
+
+  @override
+  void dispose() {
+    print('dispose');
+    RemoveEvents();
   }
 }
