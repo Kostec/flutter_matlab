@@ -9,23 +9,63 @@ class BlockIO{
   double value;
   BlockIO connectedTo;
   BlockIO({this.name = 'IO'});
+  void disconnect() {}
 }
 
 class PortInput extends BlockIO{
-  @override
-  String name;
-  @override
-  int num;
   IOtype type = IOtype.input;
-  PortInput({this.num, this.name = 'In'});
+  PortInput({num, name = 'In'}){
+    this.num = num;
+    this.name = name;
+  }
+
+  void connect(PortOutput portOutput){
+    if (connectedTo != portOutput){
+      connectedTo = portOutput;
+      portOutput.connect(this);
+    }
+    else print('Уже подключено');
+  }
+
+  @override
+  void disconnect(){
+    if (connectedTo != null){
+      PortOutput portOutput = connectedTo;
+      connectedTo = null;
+      portOutput.disconnectPort(this);
+    }
+  }
 }
 
 class PortOutput extends BlockIO{
-  @override
-  String name;
-  @override
-  int num;
   IOtype type = IOtype.output;
   @override
-  PortOutput({this.num, this.name = 'Out'});
+  PortOutput({num, name = 'Out'}){
+    this.num = num;
+    this.name = name;
+  }
+
+  List<PortInput> connections = [];
+
+  void connect(PortInput portIntput){
+    if (!connections.contains(portIntput)){
+      connections.add(portIntput);
+      portIntput.connect(this);
+    }
+  }
+
+  void disconnectPort(PortInput portInput){
+    var input = connections.firstWhere((element) => element == portInput, orElse: null);
+    if (input != null){
+      if (input.connectedTo != this) {
+        connections.remove(input);
+        input.disconnect();
+      }
+    }
+  }
+
+  @override
+  void disconnect(){
+
+  }
 }

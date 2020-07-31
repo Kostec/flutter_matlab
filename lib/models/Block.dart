@@ -33,34 +33,6 @@ abstract class Block {
     return this.runtimeType.toString();
   }
 
-  void addInput(Block connectTo, int portIn, int portOut){
-    var blockIn = this;
-    if (blockIn.numIn < portIn || connectTo.numOut < portOut){
-      print ('Не удалось соединить порты');
-      return;
-    }
-  }
-
-  void addOutput(Block blockIn, int portIn, int portOut){
-    var blockOut = this;
-    if (blockIn.numIn < portIn || blockOut.numOut < portOut){
-      print ('Не удалось соединить порты');
-      return;
-    }
-  }
-
-  void removeInput(PortInput portIn){
-    if (IO.contains(portIn)){
-      IO.remove(portIn);
-    }
-  }
-
-  void removeOutput(PortOutput portOut){
-    if (IO.contains(portOut)){
-      IO.remove(portOut);
-    }
-  }
-
   Map<String, dynamic> getPreference(){
     return {'name': name};
   }

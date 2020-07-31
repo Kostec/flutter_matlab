@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttermatlab/models/Block.dart';
+import 'package:fluttermatlab/models/BlockIO.dart';
 import 'package:fluttermatlab/models/Constant.dart';
 import 'package:fluttermatlab/models/Derivative.dart';
 import 'package:fluttermatlab/models/Integrator.dart';
@@ -44,6 +45,7 @@ class _ModelPageState extends State<ModelPage>{
   @override
   void initState() {
     workspace.selectedMathModel = workspace.selectedMathModel ?? createTestModel();
+    createTestModel();
     addEvents();
   }
 
@@ -52,10 +54,15 @@ class _ModelPageState extends State<ModelPage>{
     model = new ViewMathModel();
     List<Block> blocks = [];
 
-    blocks.add(new Constant(value: 3));
-    blocks.add(new TransferFcn(nums: [1], dens: [1,1]));
-    blocks.add(new Integrator(coef: 2.1));
-    blocks.add(new Derivative());
+    var constant = new Constant(value: 3);
+    var transfer = new TransferFcn(nums: [1], dens: [1,1]);
+    var integrator = new Integrator(coef: 2.1);
+    var derivative = new Derivative();
+
+    blocks.add(constant);
+    blocks.add(transfer);
+    blocks.add(integrator);
+    blocks.add(derivative);
     double countX = 20;
     double countY = 20;
 
@@ -141,6 +148,7 @@ class _ModelPageState extends State<ModelPage>{
   void showAddBlockDialog(BuildContext context) {
     scaffoldKey.currentState.showBottomSheet((context){
       return Container(
+        decoration: BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(40), topRight: Radius.circular(40)), color: Colors.grey),
         height: 200,
         child: ListView.builder(
           itemCount: Library.blocks.length,
