@@ -96,6 +96,7 @@ abstract class Block {
   }
 
   void setPreference(Map<String, dynamic> preference){
+    name = preference['name'];
   }
 
   List<String> getDisplay() {
