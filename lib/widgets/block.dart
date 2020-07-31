@@ -168,6 +168,7 @@ class _BlockWidgetState extends State<BlockWidget>{
   List<Widget> display = [];
   List<Widget> inputs = [];
   List<Widget> outputs = [];
+  List<Widget> inputNames = [];
   Widget displayWidget;
 
   @override
@@ -185,19 +186,37 @@ class _BlockWidgetState extends State<BlockWidget>{
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container (
-            decoration: BoxDecoration(border: Border.all(color: border_color), color: Colors.white),
-            child: Wrap(
-              direction: Axis.horizontal,
-              crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Wrap(children: inputs, direction: Axis.vertical, spacing: 5,),
-                  Container(child: displayWidget,),
-                  Wrap(children: outputs, direction: Axis.vertical,),
-                ]
-            ),),
+          Wrap(
+            direction: Axis.horizontal,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Wrap(children: inputs, direction: Axis.vertical, spacing: 5,),
+              Container (
+                decoration: BoxDecoration(border: Border.all(color: border_color), color: Colors.white),
+                child: Wrap(
+                  direction: Axis.horizontal,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Container(child: displayWidget,),
+                    ]
+                ),),
+              Wrap(children: outputs, direction: Axis.vertical,),
+              ]
+          ),
           Text('${block.name}'),
         ]));
+  }
+
+  void buildInputNames(){
+    inputNames.clear();
+    for (int i = 0; i < block.numIn; i++){
+      inputNames.add(Container(
+        padding: EdgeInsets.all(2),
+//        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
+        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+        child: Center(child: Text('${i+1}')),
+      ),);
+    }
   }
 
   void buildInputs(){
