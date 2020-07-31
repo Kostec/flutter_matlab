@@ -57,7 +57,7 @@ class TransferFcn extends Block{
 
   @override
   void setPreference(Map<String, dynamic> preference){
-    name = preference['name'];
+    super.setPreference(preference);
     var numsStr = preference['nums'].toString().replaceAll('[', '').replaceAll(']', '');
     var nums = numsStr.split(',');
     this.nums.clear();
