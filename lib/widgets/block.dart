@@ -17,6 +17,8 @@ class PositionedBlockWidget extends StatefulWidget{
   double x; double y;
   Block block;
   bool canOpenPreference;
+  List<Widget> inputs = [];
+  List<Widget> outputs = [];
   PositionedBlockWidget({this.x, this.y, this.block, this.canOpenPreference = true});
 
   @override
@@ -51,6 +53,8 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
   @override
   Widget build(BuildContext context) {
     blockWidget = BlockWidget(block: block,);
+    widget.inputs = blockWidget.inputs;
+    widget.outputs = blockWidget.outputs;
     return Positioned(top: y, left: x,
       child: GestureDetector(
         onLongPress: widget.canOpenPreference ? () async {showDialog(context);} : null,
@@ -150,17 +154,18 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
 
 class BlockWidget extends StatefulWidget{
   Block block;
+  List<Widget> inputs = [];
+  List<Widget> outputs = [];
   BlockWidget({this.block});
 
   @override
   State<StatefulWidget> createState() {
-    return _BlockWidgetState(block: block);
+    return _BlockWidgetState();
   }
 }
 
 class _BlockWidgetState extends State<BlockWidget>{
   Block block;
-  _BlockWidgetState({this.block});
 
   Color border_color = Colors.black;
   Border border;
@@ -174,7 +179,11 @@ class _BlockWidgetState extends State<BlockWidget>{
 
   @override
   void initState() {
-
+    block = widget.block;
+    inputs = widget.inputs;
+    outputs = widget.outputs;
+    inputs = [];
+    outputs = [];
   }
   @override
   Widget build(BuildContext context) {
