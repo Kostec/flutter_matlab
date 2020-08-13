@@ -131,12 +131,19 @@ class _ModelPageState extends State<ModelPage>{
   }
 
   Widget _buildBody(){
+    var widgets = workspace.selectedMathModel.blockWidgets;
 
     List<Widget> child = [];
     workspace.selectedMathModel.blockWidgets.forEach((element) {
       child.add(element);
-      child.add(Positioned(top: element.y, left: element.x,child: CustomPaint(size: Size(0,0), painter: MyPainter(0, 0, -100, 0),)));
     });
+
+    for(int i = 0; i < widgets.length; i +=2)
+    {
+      var y =  widgets[i+1].y -  widgets[i].y + 25;
+      var x =  widgets[i+1].x -  widgets[i].x + 75;
+      child.add(Positioned(top: widgets[i].y, left: widgets[i].x,child: CustomPaint(size: Size(0,0), painter: MyPainter(30, 25, x, y),)));
+    }
 
     return GestureDetector(
       onTapDown: (details) => print('OnTap'),
@@ -241,8 +248,8 @@ class MyPainter extends CustomPainter { //         <-- CustomPainter class
   @override
   void paint(Canvas canvas, Size size) {
     //                                             <-- Insert your painting code here.
-    final p1 = Offset(0, 0);
-    final p2 = Offset(40, 0);
+    final p1 = Offset(start_x, start_y);
+    final p2 = Offset(end_x, end_y);
     final paint = Paint()
       ..color = Colors.black
       ..strokeWidth = 4;
