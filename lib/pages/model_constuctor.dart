@@ -13,7 +13,9 @@ import 'package:fluttermatlab/services/library.dart';
 import 'package:fluttermatlab/services/modeling.dart';
 import 'package:fluttermatlab/services/workspace.dart';
 import 'package:fluttermatlab/widgets/block.dart';
+import 'package:fluttermatlab/widgets/io.dart';
 import 'package:fluttermatlab/widgets/menu.dart';
+import 'package:fluttermatlab/widgets/line.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 
 class ModelPage extends StatefulWidget{
@@ -68,6 +70,7 @@ class _ModelPageState extends State<ModelPage>{
 
     (constant.Outputs[0] as PortOutput).connect(transfer.Inputs[0]);
 
+    (constant.Outputs[0] as PortOutput).connect(derivative.Inputs[0]);
 
     blocks.forEach((block) {
       workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: countX, y: countY, block: block));
@@ -138,11 +141,16 @@ class _ModelPageState extends State<ModelPage>{
       child.add(element);
     });
 
-    for(int i = 0; i < widgets.length; i +=2)
+    for(int i = 0; i < widgets.length; i++)
     {
-      var y =  widgets[i+1].y -  widgets[i].y + 25;
-      var x =  widgets[i+1].x -  widgets[i].x + 75;
-      child.add(Positioned(top: widgets[i].y, left: widgets[i].x,child: CustomPaint(size: Size(0,0), painter: MyPainter(30, 25, x, y),)));
+      widgets[i].block.Inputs.forEach((element) {
+        var cl = widgets.firstWhere( (w) => w.block.Outputs.contains(element.connectedTo), orElse: () => null);
+        if (cl != null){
+          var y =  cl.y -  widgets[i].y;
+          var x =  cl.x -  widgets[i].x;
+          child.add(Positioned(top: widgets[i].y, left: widgets[i].x,child: CustomPaint(size: Size(0,0), painter: MyPainter(30, 25, x, y),)));
+        }
+      });
     }
 
     return GestureDetector(
@@ -234,30 +242,5 @@ class _ModelPageState extends State<ModelPage>{
   void dispose() {
     print('dispose');
     RemoveEvents();
-  }
-}
-
-class MyPainter extends CustomPainter { //         <-- CustomPainter class
-
-  double start_x;
-  double start_y;
-  double end_x;
-  double end_y;
-  MyPainter(this.start_x, this.start_y, this.end_x, this.end_y);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    //                                             <-- Insert your painting code here.
-    final p1 = Offset(start_x, start_y);
-    final p2 = Offset(end_x, end_y);
-    final paint = Paint()
-      ..color = Colors.black
-      ..strokeWidth = 4;
-    canvas.drawLine(p1, p2, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter old) {
-    return false;
   }
 }
