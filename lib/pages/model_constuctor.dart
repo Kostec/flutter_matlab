@@ -69,7 +69,7 @@ class _ModelPageState extends State<ModelPage>{
     double countY = 20;
 
     (constant.Outputs[0] as PortOutput).connect(transfer.Inputs[0]);
-
+    (transfer.Outputs[0] as PortOutput).connect(integrator.Inputs[0]);
     (constant.Outputs[0] as PortOutput).connect(derivative.Inputs[0]);
 
     blocks.forEach((block) {
