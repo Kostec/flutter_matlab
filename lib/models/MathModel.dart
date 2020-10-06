@@ -12,7 +12,7 @@ class MathModel{
   }
   void Solve(){
     Solver solver = Solver();
-    solver.evaluate(blocks);
+    solver.start_evaluate();
   }
   void addBlock(Block block){
     blocks.add(block);

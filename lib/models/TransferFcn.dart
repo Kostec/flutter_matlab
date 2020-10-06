@@ -77,9 +77,13 @@ class TransferFcn extends Block{
   List<double> evaluate(double T) {
     print('Evaluate TransferFcn');
     super.evaluate(T);
-    var _in = IO.firstWhere((io) => io.type == IOtype.input)?.value;
-    var _out = IO.firstWhere((io) => io.type == IOtype.output)?.value;
-    if (_in == null || _out == null) return [0];
+    var _in = Inputs[0].value;
+    var _out = Outputs[0].value;
+    if (_in == null || _out == null) {
+      Inputs[0].value = 0;
+      (Outputs[0] as PortOutput).setValue(0);
+      return [0];
+    }
     double up = 0;
     double down = 0;
     for(int i = 0; i < nums.length; i++){
@@ -89,7 +93,8 @@ class TransferFcn extends Block{
       down += dens[i] / (T * i);
     }
     _out = _in * up / down;
-    state.addEntries([new MapEntry(time, [_out])]);
+    state[time] = [_out];//.addEntries([new MapEntry(time, [_out])]);
+    (Outputs[0] as PortOutput).setValue(_out);
     return [_out];
   }
 }

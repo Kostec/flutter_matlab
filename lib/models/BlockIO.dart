@@ -68,4 +68,11 @@ class PortOutput extends BlockIO{
   void disconnect(){
 
   }
+
+  void setValue(double value){
+    this.value = value;
+    connections.forEach((element) {
+      element.value = value;
+    });
+  }
 }

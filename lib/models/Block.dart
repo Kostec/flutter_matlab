@@ -9,7 +9,7 @@ abstract class Block {
   Block({this.name = 'Block'});
   List<BlockIO> IO = [];
   double time = 0;
-  Map<double, List<double>> state;
+  Map<double, List<double>> state = {};
 
   List<BlockIO> get Inputs{
     return IO.where((io) => io.type == IOtype.input).toList();
@@ -26,6 +26,15 @@ abstract class Block {
     for(int i = 0; i < numOut; i++){
       IO.add(PortOutput(num: i));
     }
+  }
+
+  void ResetIO(){
+    Inputs.forEach((element){
+      element.value = 0;
+    });
+    Outputs.forEach((element){
+      (element as PortOutput).setValue(0);
+    });
   }
 
   @override
@@ -47,5 +56,11 @@ abstract class Block {
 
   List<double> evaluate(double T){
     time += T;
+  }
+
+  void resetState(){
+    time = 0;
+    state.clear();
+    ResetIO();
   }
 }

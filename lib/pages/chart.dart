@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttermatlab/services/workspace.dart';
 import 'package:fluttermatlab/widgets/menu.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -25,8 +26,14 @@ class _ChartPageState extends State<ChartPage> {
   Timer timer;
   @override
   void initState() {
-    data.add(ChartData(time: 0, value: 0));
-    timer = Timer.periodic(Duration(microseconds: 100), timeCallback);
+//    data.add(ChartData(time: 0, value: 0));
+//    timer = Timer.periodic(Duration(microseconds: 100), timeCallback);
+
+    var block = workspace.selectedMathModel.mathModel.blocks[0];
+    block.state.forEach((key, value) {
+      data.add(ChartData(time: key, value: value[0]));
+    });
+
   }
 
   double time = 0;
@@ -152,7 +159,7 @@ class _ChartPageState extends State<ChartPage> {
         ),
       ),
       minY: -1.5,
-      maxY: 1.5,
+      maxY: 10,
       maxX: 15,
       minX: 0,
       lineBarsData: linesBarData1(),

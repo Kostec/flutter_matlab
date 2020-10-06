@@ -61,18 +61,15 @@ class _ModelPageState extends State<ModelPage>{
     var constant = new Constant(value: 3);
     var transfer = new TransferFcn(nums: [1], dens: [1,1]);
     var integrator = new Integrator(coef: 2.1);
-    var derivative = new Derivative();
 
     blocks.add(constant);
     blocks.add(transfer);
     blocks.add(integrator);
-    blocks.add(derivative);
     double countX = 20;
     double countY = 20;
 
     (constant.Outputs[0] as PortOutput).connect(transfer.Inputs[0]);
     (transfer.Outputs[0] as PortOutput).connect(integrator.Inputs[0]);
-    (constant.Outputs[0] as PortOutput).connect(derivative.Inputs[0]);
 
     blocks.forEach((block) {
       workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: countX, y: countY, block: block));
@@ -119,6 +116,12 @@ class _ModelPageState extends State<ModelPage>{
         IconButton(
           icon: Icon(Icons.refresh),
           onPressed: (){setState((){});},
+        ),
+        IconButton(
+          icon: Icon(Icons.play_arrow),
+          onPressed: (){
+            workspace.selectedMathModel.mathModel.Solve();
+          },
         ),
         PopupMenuButton(
           onSelected: (value) => {moreItems[value]()},
