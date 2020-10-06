@@ -44,6 +44,8 @@ class _ModelPageState extends State<ModelPage>{
 
   Map<String, Function> moreItems;
 
+  List<Widget> lines = [];
+
   @override
   void initState() {
     workspace.selectedMathModel = workspace.selectedMathModel ?? createTestModel();
@@ -136,10 +138,8 @@ class _ModelPageState extends State<ModelPage>{
   Widget _buildBody(){
     var widgets = workspace.selectedMathModel.blockWidgets;
 
+    lines.clear();
     List<Widget> child = [];
-    workspace.selectedMathModel.blockWidgets.forEach((element) {
-      child.add(element);
-    });
 
     for(int i = 0; i < widgets.length; i++)
     {
@@ -148,10 +148,16 @@ class _ModelPageState extends State<ModelPage>{
         if (cl != null){
           var y =  cl.y -  widgets[i].y;
           var x =  cl.x -  widgets[i].x;
-          child.add(Positioned(top: widgets[i].y, left: widgets[i].x,child: CustomPaint(size: Size(0,0), painter: MyPainter(30, 25, x, y),)));
+          AddLine(widgets[i].x, widgets[i].y, x, y);
         }
       });
     }
+
+    child.addAll(lines);
+
+    workspace.selectedMathModel.blockWidgets.forEach((element) {
+      child.add(element);
+    });
 
     return GestureDetector(
       onTapDown: (details) => print('OnTap'),
@@ -162,6 +168,10 @@ class _ModelPageState extends State<ModelPage>{
         enableScroll: true,
         child: Stack(children: child,),
     ));
+  }
+
+  void AddLine(double start_x, double start_y, double end_x, double end_y){
+    lines.add(Positioned(top: start_y, left: start_x,child: CustomPaint(size: Size(0,0), painter: MyPainter(30, 25, end_x, end_y),)));
   }
 
   void showAddBlockDialog(BuildContext context) {
