@@ -22,18 +22,19 @@ class ChartPage extends StatefulWidget{
 class _ChartPageState extends State<ChartPage> {
 
   List<ChartData> data = new List<ChartData>();
+  double maxTime;
 
   Timer timer;
   @override
   void initState() {
-//    data.add(ChartData(time: 0, value: 0));
-//    timer = Timer.periodic(Duration(microseconds: 100), timeCallback);
-
     var block = workspace.selectedMathModel.mathModel.blocks[0];
+    double previousMaxTime = -1;
     block.state.forEach((key, value) {
       data.add(ChartData(time: key, value: value[0]));
+      previousMaxTime = previousMaxTime < key ? key : previousMaxTime;
     });
-
+    maxTime = previousMaxTime;
+    print('maxTime: $maxTime');
   }
 
   double time = 0;
@@ -42,27 +43,6 @@ class _ChartPageState extends State<ChartPage> {
   int count = 0;
 
   List<ChartData> buffer = new List<ChartData>();
-
-  void timeCallback (Timer timer){
-    if (time < 12) {
-      var chartData = ChartData(time: time, value: value);
-        buffer.add(chartData);
-        time += T;
-        value = sin(time);
-        if (buffer.length - count > 1000){
-          setState(() {
-            data = buffer;
-            count = buffer.length;
-          });
-        }
-    }
-    else{
-      setState(() {
-        data = buffer;
-      });
-      timer.cancel();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,6 +91,8 @@ class _ChartPageState extends State<ChartPage> {
           ),
           margin: 10,
           getTitles: (value) { // цифры на оси X
+            if (value == maxTime)
+              return value.toString();
             switch (value.toInt()) {
               case 0:
               case 2:
@@ -160,7 +142,7 @@ class _ChartPageState extends State<ChartPage> {
       ),
       minY: -1.5,
       maxY: 10,
-      maxX: 15,
+      maxX: maxTime,
       minX: 0,
       lineBarsData: linesBarData1(),
     );

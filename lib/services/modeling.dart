@@ -28,6 +28,9 @@ class Solver{
   /// Выполняет полное решение системы
   void evaluate(List<Block> blocks) {
     if (modelingTime == startTime) {
+      blocks.forEach((block) {
+        block.resetState();
+      });
       first_evaluate(blocks);
     }
     else {
@@ -43,7 +46,7 @@ class Solver{
     // поиск источников сигнала (они не имеют входов)
     var inputs = blocks.where((element) => element.Inputs.length == 0).toList();
     inputs.forEach((input) {
-      input.evaluate(modelingTime);
+      input.evaluate(T);
       List<Block> outs = [];
       input.Outputs.forEach((io) {
         var out = io as PortOutput;
@@ -56,8 +59,10 @@ class Solver{
       print('modeling time: $modelingTime');
       evaluate(outs);
     });
-    if (modelingTime != endTime) first_evaluate(blocks);
-    else print('end modeling');
+    if (modelingTime <= endTime)
+      first_evaluate(blocks);
+    else
+      print('end modeling');
   }
 
   List<Block> getNext(List<Block> blocks){

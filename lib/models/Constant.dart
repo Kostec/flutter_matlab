@@ -14,6 +14,7 @@ class Constant extends Block{
   List<double> evaluate(double T) {
     super.evaluate(T);
     state.addEntries([new MapEntry(time, [value])]);
+    print('constant time: $time');
     return [value];
   }
 
