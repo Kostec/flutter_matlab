@@ -33,17 +33,17 @@ class Integrator extends Block{
   List<double> evaluate(double T) {
     print('Evaluate Integrator');
     super.evaluate(T);
-    var _in = Inputs[0].value;
-    var _out = Outputs[0].value;
+    double _in = Inputs[0].value;
+    double _out = Outputs[0].value;
     if (state.length == 0) _out = initValue;
     if (_in == null || _out == null) {
       Inputs[0].value = 0;
       (Outputs[0] as PortOutput).setValue(0);
       return [0];
     }
-    _out += (_in - previousValue) * T;
+    _out += _in * T;
     previousValue = _in;
-    state.addEntries([new MapEntry(time, [_out])]);
+    state[time] = [_out];
     (Outputs[0] as PortOutput).setValue(_out);
     return [_out];
   }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'Block.dart';
 import 'BlockIO.dart';
 
@@ -87,14 +89,15 @@ class TransferFcn extends Block{
     double up = 0;
     double down = 0;
     for(int i = 0; i < nums.length; i++){
-      up += nums[i] / (T * i);
+      up += nums[i] * pow(T, i);
     }
     for(int i = 0; i < dens.length; i++){
-      down += dens[i] / (T * i);
+      down += dens[i] * pow(T, i);
     }
-    _out = _in * up / down;
+    _out = (_in - _out) * up / down;
     state[time] = [_out];//.addEntries([new MapEntry(time, [_out])]);
     (Outputs[0] as PortOutput).setValue(_out);
+    print('Transfer: $_out');
     return [_out];
   }
 }

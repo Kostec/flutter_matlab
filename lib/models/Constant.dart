@@ -1,4 +1,5 @@
 import 'package:fluttermatlab/models/Block.dart';
+import 'package:fluttermatlab/models/BlockIO.dart';
 
 class Constant extends Block{
   double value = 1;
@@ -14,6 +15,7 @@ class Constant extends Block{
   List<double> evaluate(double T) {
     super.evaluate(T);
     state.addEntries([new MapEntry(time, [value])]);
+    (Outputs[0] as PortOutput).setValue(value);
     print('constant time: $time');
     return [value];
   }

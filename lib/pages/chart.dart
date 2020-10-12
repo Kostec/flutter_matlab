@@ -21,28 +21,23 @@ class ChartPage extends StatefulWidget{
 
 class _ChartPageState extends State<ChartPage> {
 
-  List<ChartData> data = new List<ChartData>();
-  double maxTime;
+  List<MyChart> charts = [];
+
+  List<Widget> column = [];
 
   Timer timer;
   @override
   void initState() {
-    var block = workspace.selectedMathModel.mathModel.blocks[0];
-    double previousMaxTime = -1;
-    block.state.forEach((key, value) {
-      data.add(ChartData(time: key, value: value[0]));
-      previousMaxTime = previousMaxTime < key ? key : previousMaxTime;
+
+    workspace.selectedMathModel.mathModel.blocks.forEach((block) {
+      var chart = MyChart(name: block.name);
+      block.state.forEach((key, value) {
+        chart.addChartData(ChartData(time: key, value: value[0]));
+      });
+      charts.add(chart);
+      column.add(chart.buildChart());
     });
-    maxTime = previousMaxTime;
-    print('maxTime: $maxTime');
   }
-
-  double time = 0;
-  double value = 0;
-  double T = 0.0001;
-  int count = 0;
-
-  List<ChartData> buffer = new List<ChartData>();
 
   @override
   Widget build(BuildContext context) {
@@ -57,20 +52,56 @@ class _ChartPageState extends State<ChartPage> {
   }
 
   Widget _buildBody() {
-    return Column(
-      children: <Widget>[
-        Container(
+    return SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
           padding: EdgeInsets.all(5.0),
           margin: EdgeInsets.all(5.0),
-          child: LineChart(sampleData1()),
-        ),
-      ],
+          child: ListView.builder(
+            itemCount: charts.length,
+            itemBuilder: (context, idx){
+              return ListTile(
+                title: Center(child: Text(charts[idx].name)),
+                subtitle: charts[idx].buildChart(),
+              );
+            },
+          )
+        )
     );
   }
 
+}
 
-  LineChartData sampleData1() {
-    return LineChartData(
+class ChartData{
+  final double time;
+  final double value;
+  ChartData({this.value, this.time});
+}
+
+class MyChart{
+  List<ChartData> _chartData = [];
+  double maxX;
+  double maxY;
+
+  String name;
+
+  double previousMaxX;
+  double previousMaxY;
+
+  MyChart({this.name});
+
+  void addChartData(ChartData data){
+    if (_chartData.length == 0){
+      maxX = data.time;
+      maxY = data.value;
+    }
+    _chartData.add(data);
+    if (data.value > maxY) maxY = data.value;
+    if (data.time > maxX) maxX = data.time;
+  }
+
+  LineChart buildChart() {
+    return LineChart(LineChartData(
       lineTouchData: LineTouchData(
         touchTooltipData: LineTouchTooltipData(
           tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
@@ -91,7 +122,7 @@ class _ChartPageState extends State<ChartPage> {
           ),
           margin: 10,
           getTitles: (value) { // цифры на оси X
-            if (value == maxTime)
+            if (value == maxX)
               return value.toString();
             switch (value.toInt()) {
               case 0:
@@ -141,17 +172,17 @@ class _ChartPageState extends State<ChartPage> {
         ),
       ),
       minY: -1.5,
-      maxY: 10,
-      maxX: maxTime,
+      maxY: maxY + 1.5,
+      maxX: maxX + 1.5,
       minX: 0,
-      lineBarsData: linesBarData1(),
-    );
+      lineBarsData: _buildLineChartBar(),
+    ));
   }
 
-  List<LineChartBarData> linesBarData1() {
+  List<LineChartBarData> _buildLineChartBar() {
     List<FlSpot> spots = new List<FlSpot>();
 
-    data.forEach((element) {
+    _chartData.forEach((element) {
       spots.add(FlSpot(element.time, element.value));
     });
 
@@ -168,11 +199,4 @@ class _ChartPageState extends State<ChartPage> {
     );
     return [lineChartBarData1];
   }
-
-}
-
-class ChartData{
-  final double time;
-  final double value;
-  ChartData({this.value, this.time});
 }
