@@ -54,7 +54,7 @@ class _ChartPageState extends State<ChartPage> {
   Widget _buildBody() {
     return SingleChildScrollView(
         child: Container(
-          height: MediaQuery.of(context).size.height,
+          height: MediaQuery.of(context).size.height - 100,
           padding: EdgeInsets.all(5.0),
           margin: EdgeInsets.all(5.0),
           child: ListView.builder(
