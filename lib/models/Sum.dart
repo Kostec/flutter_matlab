@@ -59,6 +59,7 @@ class Sum extends Block{
           break;
       }
     }
+    (Outputs[0] as PortOutput).setValue(_out);
     return [_out];
   }
 
