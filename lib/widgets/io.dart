@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttermatlab/models/BlockIO.dart';
+import 'package:fluttermatlab/other/enums.dart';
+
+typedef IOGestureCallback = Function(BlockIO, GestureEnum);
 
 class IOWidget extends StatefulWidget{
   BlockIO io;
   IOWidget(this.io);
+
+  IOGestureCallback gestureCallback;
+
   @override
   State<StatefulWidget> createState() => IOWidgetState();
 }
@@ -20,18 +26,27 @@ class IOWidgetState extends State<IOWidget>{
   }
 
   Widget _buildInput(){
-    return Container(
-      padding: EdgeInsets.all(2),
-      decoration: BoxDecoration(border: Border.all(color: Colors.black), color: widget.io.connectedTo == null ? Colors.grey : Colors.green),
-      child: Center(child: Text('${widget.io.num}')),
+    return GestureDetector(
+      onTap: () => print('input tap'),
+      child: Container(
+        padding: EdgeInsets.all(2),
+        decoration: BoxDecoration(border: Border.all(color: Colors.black), color: widget.io.connectedTo == null ? Colors.grey : Colors.green),
+        child: Center(child: Text('${widget.io.num}')),
+      ),
     );
   }
 
   Widget _buildOutput(){
-    return Container(
-      padding: EdgeInsets.all(2),
-      decoration: BoxDecoration(border: Border.all(color: Colors.black), color: (widget.io as PortOutput).connections.length == 0 ? Colors.grey : Colors.blue,),
-      child: Center(child: Text('${widget.io.num}')),
+    return GestureDetector(
+        onTap: () {
+          if (widget.gestureCallback != null) widget.gestureCallback(widget.io, GestureEnum.tap);
+          print('output tap');
+        },
+        child: Container(
+          padding: EdgeInsets.all(2),
+          decoration: BoxDecoration(border: Border.all(color: Colors.black), color: (widget.io as PortOutput).connections.length == 0 ? Colors.grey : Colors.blue,),
+          child: Center(child: Text('${widget.io.num}')),
+        )
     );
   }
 }

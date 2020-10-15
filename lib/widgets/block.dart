@@ -2,16 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/BlockIO.dart';
-import 'package:fluttermatlab/models/TransferFcn.dart';
 import 'package:fluttermatlab/pages/block-preference.dart';
 import 'package:fluttermatlab/services/workspace.dart';
 import 'package:fluttermatlab/widgets/io.dart';
+import 'package:fluttermatlab/other/enums.dart';
 
 class PositionedBlockWidget extends StatefulWidget{
   double x; double y;
@@ -19,6 +16,10 @@ class PositionedBlockWidget extends StatefulWidget{
   bool canOpenPreference;
   List<Widget> inputs = [];
   List<Widget> outputs = [];
+  ConnectionCallback connectionCallback;
+
+  IOGestureCallback ioGestureCallback;
+
   PositionedBlockWidget({this.x, this.y, this.block, this.canOpenPreference = true});
 
   @override
@@ -27,6 +28,8 @@ class PositionedBlockWidget extends StatefulWidget{
   }
 
 }
+
+typedef ConnectionCallback = void Function(Block);
 
 class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
   Block block;
@@ -55,6 +58,14 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
     blockWidget = BlockWidget(block: block,);
     widget.inputs = blockWidget.inputs;
     widget.outputs = blockWidget.outputs;
+
+    blockWidget.inputs.forEach((input) {
+      (input as IOWidget).gestureCallback = IOGestureCallBack;
+    });
+    blockWidget.outputs.forEach((output) {
+      (output as IOWidget).gestureCallback = IOGestureCallBack;
+    });
+
     return Positioned(top: y, left: x,
       child: GestureDetector(
         onLongPress: widget.canOpenPreference ? () async {showDialog(context);} : null,
@@ -106,14 +117,13 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
           child: Container(
             height: 200,
             child: ListView.builder(
-                    itemCount: dialogItems.length,
-                    itemBuilder: (BuildContext context, int index){
-                      var key = dialogItems.keys.toList()[index];
-                      var func = dialogItems[key];
-
-                      return Container(
-                          child: FlatButton(child: Text(key, style: TextStyle(color: Colors.black, fontSize: 32),), onPressed: func,),
-                      );
+              itemCount: dialogItems.length,
+              itemBuilder: (BuildContext context, int index){
+                var key = dialogItems.keys.toList()[index];
+                var func = dialogItems[key];
+                return Container(
+                    child: FlatButton(child: Text(key, style: TextStyle(color: Colors.black, fontSize: 32),), onPressed: func,),
+                );
             }),
             margin: EdgeInsets.only(bottom: 50, left: 12, right: 12),
             padding: EdgeInsets.only(bottom: 12, top: 12, left: 12, right: 12),
@@ -144,11 +154,17 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
     Navigator.pop(context);
   }
   void connectIt() {
+    if (widget.connectionCallback != null) widget.connectionCallback(block);
     print('connect');
   }
   void remove(){
     workspace.selectedMathModel.removeBlock(block);
     Navigator.of(context).pop();
+  }
+
+  void IOGestureCallBack(BlockIO io, GestureEnum type){
+    print('IOGestureCallBack ${io.num} ${io.type}');
+    if (widget.ioGestureCallback != null) widget.ioGestureCallback(io, type);
   }
 }
 
@@ -226,9 +242,10 @@ class _BlockWidgetState extends State<BlockWidget>{
     for (int i = 0; i < block.numIn; i++){
       inputs.add(IOWidget(_inputs[i]));
       inputNames.add(Container(
-        padding: EdgeInsets.all(2),
-        child: Center(child: Text('${_inputs[i].name}')),
-      ),);
+          padding: EdgeInsets.all(2),
+          child: Center(child: Text('${_inputs[i].name}')),
+        ),
+      );
     }
   }
   void buildOutputs(){
@@ -245,8 +262,10 @@ class _BlockWidgetState extends State<BlockWidget>{
   }
   void buildDisplay(){
     getDisplay();
-    displayWidget = Container(
-      padding: EdgeInsets.all(10),
+    displayWidget = GestureDetector(
+      onTap: () => print('Display Tap'),
+      child: Container(
+        padding: EdgeInsets.all(10),
         child: Wrap(
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
@@ -254,6 +273,7 @@ class _BlockWidgetState extends State<BlockWidget>{
           spacing: 10,
           children: display,
         ),
+      ),
     );
   }
   void getDisplay(){
