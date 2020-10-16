@@ -6,6 +6,10 @@ import 'package:fluttermatlab/other/enums.dart';
 typedef IOGestureCallback = Function(BlockIO, GestureEnum);
 
 class IOWidget extends StatefulWidget{
+  static int count = 0;
+
+  BuildContext context;
+
   BlockIO io;
   IOWidget(this.io);
 
@@ -22,6 +26,7 @@ class IOWidgetState extends State<IOWidget>{
 
   @override
   Widget build(BuildContext context) {
+    widget.context = context;
     return widget.io is PortInput ? _buildInput() : _buildOutput();
   }
 
@@ -39,14 +44,14 @@ class IOWidgetState extends State<IOWidget>{
   Widget _buildOutput(){
     return GestureDetector(
         onTap: () {
-          if (widget.gestureCallback != null) widget.gestureCallback(widget.io, GestureEnum.tap);
-          print('output tap');
-        },
-        child: Container(
-          padding: EdgeInsets.all(2),
-          decoration: BoxDecoration(border: Border.all(color: Colors.black), color: (widget.io as PortOutput).connections.length == 0 ? Colors.grey : Colors.blue,),
-          child: Center(child: Text('${widget.io.num}')),
-        )
+        if (widget.gestureCallback != null) widget.gestureCallback(widget.io, GestureEnum.tap);
+        print('output tap');
+      },
+      child: Container(
+        padding: EdgeInsets.all(2),
+        decoration: BoxDecoration(border: Border.all(color: Colors.black), color: (widget.io as PortOutput).connections.length == 0 ? Colors.grey : Colors.blue,),
+        child: Center(child: Text('${widget.io.num}')),
+      )
     );
   }
 }

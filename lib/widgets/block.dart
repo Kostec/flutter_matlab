@@ -241,6 +241,7 @@ class _BlockWidgetState extends State<BlockWidget>{
     inputNames.clear();
     for (int i = 0; i < block.numIn; i++){
       inputs.add(IOWidget(_inputs[i]));
+      widget.inputs.add(IOWidget(_inputs[i]));
       inputNames.add(Container(
           padding: EdgeInsets.all(2),
           child: Center(child: Text('${_inputs[i].name}')),
@@ -254,6 +255,7 @@ class _BlockWidgetState extends State<BlockWidget>{
     outputNames.clear();
     for (int i = 0; i < block.numOut; i++){
       outputs.add(IOWidget(_outputs[i]));
+      widget.outputs.add(IOWidget(_outputs[i]));
       outputNames.add(Container(
         padding: EdgeInsets.all(2),
         child: Center(child: Text('${_outputs[i].name}')),

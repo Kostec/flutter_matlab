@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/BlockIO.dart';
 import 'package:fluttermatlab/models/Constant.dart';
@@ -51,6 +52,35 @@ class _ModelPageState extends State<ModelPage>{
     workspace.selectedMathModel = workspace.selectedMathModel ?? createTestModel();
     createTestModel();
     addEvents();
+
+    SchedulerBinding.instance.addPostFrameCallback((_){
+      IOWidget ioWidget = ((workspace.selectedMathModel.blockWidgets[0] as PositionedBlockWidget).outputs[0] as IOWidget);
+
+      workspace.selectedMathModel.blockWidgets.forEach((blockWidget) {
+        blockWidget.block.Inputs.forEach((input) {
+          var output = workspace.selectedMathModel.blockWidgets.firstWhere( (w) => w.block.Outputs.contains(input.connectedTo), orElse: () => null);
+          if (output != null){
+
+            IOWidget inputWidget = blockWidget.inputs.firstWhere((i) => (i as IOWidget).io == input, orElse: () => null);
+            IOWidget outputWidget = output.outputs.firstWhere((o) => (o as IOWidget).io == input.connectedTo, orElse: () => null);
+
+            if (inputWidget != null && outputWidget != null) {
+              RenderBox inputBox = inputWidget.context.findRenderObject() as RenderBox;
+              RenderBox outpuBox = outputWidget.context.findRenderObject() as RenderBox;
+
+              Offset inputOffset = inputBox.localToGlobal(Offset.zero);
+              Offset outputOffset = outpuBox.localToGlobal(Offset.zero);
+
+              AddLine(inputOffset.dx, inputOffset.dy, outputOffset.dx,
+                  outputOffset.dy);
+            }
+          }
+        });
+      });
+
+      List<Widget> child = [];
+      child.addAll(lines);
+    });
   }
 
   ViewMathModel createTestModel(){
@@ -144,19 +174,17 @@ class _ModelPageState extends State<ModelPage>{
     lines.clear();
     List<Widget> child = [];
 
-    for(int i = 0; i < widgets.length; i++)
-    {
-      widgets[i].block.Inputs.forEach((element) {
-        var cl = widgets.firstWhere( (w) => w.block.Outputs.contains(element.connectedTo), orElse: () => null);
-        if (cl != null){
-          var y =  cl.y -  widgets[i].y;
-          var x =  cl.x -  widgets[i].x;
-          AddLine(widgets[i].x, widgets[i].y, x, y);
-        }
-      });
-    }
-
-    child.addAll(lines);
+//    for(int i = 0; i < widgets.length; i++)
+//    {
+//      widgets[i].block.Inputs.forEach((element) {
+//        var cl = widgets.firstWhere( (w) => w.block.Outputs.contains(element.connectedTo), orElse: () => null);
+//        if (cl != null){
+//          var y =  cl.y -  widgets[i].y;
+//          var x =  cl.x -  widgets[i].x;
+//          AddLine(widgets[i].x, widgets[i].y, x, y);
+//        }
+//      });
+//    }
 
     workspace.selectedMathModel.blockWidgets.forEach((element) {
       child.add(element);
