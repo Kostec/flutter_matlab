@@ -53,34 +53,34 @@ class _ModelPageState extends State<ModelPage>{
     createTestModel();
     addEvents();
 
-    SchedulerBinding.instance.addPostFrameCallback((_){
-      IOWidget ioWidget = ((workspace.selectedMathModel.blockWidgets[0] as PositionedBlockWidget).outputs[0] as IOWidget);
-
-      workspace.selectedMathModel.blockWidgets.forEach((blockWidget) {
-        blockWidget.block.Inputs.forEach((input) {
-          var output = workspace.selectedMathModel.blockWidgets.firstWhere( (w) => w.block.Outputs.contains(input.connectedTo), orElse: () => null);
-          if (output != null){
-
-            IOWidget inputWidget = blockWidget.inputs.firstWhere((i) => (i as IOWidget).io == input, orElse: () => null);
-            IOWidget outputWidget = output.outputs.firstWhere((o) => (o as IOWidget).io == input.connectedTo, orElse: () => null);
-
-            if (inputWidget != null && outputWidget != null) {
-              RenderBox inputBox = inputWidget.context.findRenderObject() as RenderBox;
-              RenderBox outpuBox = outputWidget.context.findRenderObject() as RenderBox;
-
-              Offset inputOffset = inputBox.localToGlobal(Offset.zero);
-              Offset outputOffset = outpuBox.localToGlobal(Offset.zero);
-
-              AddLine(inputOffset.dx, inputOffset.dy, outputOffset.dx,
-                  outputOffset.dy);
-            }
-          }
-        });
-      });
-
-      List<Widget> child = [];
-      child.addAll(lines);
-    });
+//    SchedulerBinding.instance.addPostFrameCallback((_){
+//      IOWidget ioWidget = ((workspace.selectedMathModel.blockWidgets[0] as PositionedBlockWidget).outputs[0] as IOWidget);
+//
+//      workspace.selectedMathModel.blockWidgets.forEach((blockWidget) {
+//        blockWidget.block.Inputs.forEach((input) {
+//          var output = workspace.selectedMathModel.blockWidgets.firstWhere( (w) => w.block.Outputs.contains(input.connectedTo), orElse: () => null);
+//          if (output != null){
+//
+//            IOWidget inputWidget = blockWidget.inputs.firstWhere((i) => (i as IOWidget).io == input, orElse: () => null);
+//            IOWidget outputWidget = output.outputs.firstWhere((o) => (o as IOWidget).io == input.connectedTo, orElse: () => null);
+//
+//            if (inputWidget != null && outputWidget != null) {
+//              RenderBox inputBox = inputWidget.context.findRenderObject() as RenderBox;
+//              RenderBox outpuBox = outputWidget.context.findRenderObject() as RenderBox;
+//
+//              Offset inputOffset = inputBox.localToGlobal(Offset.zero);
+//              Offset outputOffset = outpuBox.localToGlobal(Offset.zero);
+//
+//              AddLine(inputOffset.dx, inputOffset.dy, outputOffset.dx,
+//                  outputOffset.dy);
+//            }
+//          }
+//        });
+//      });
+//
+//      List<Widget> child = [];
+//      child.addAll(lines);
+//    });
   }
 
   ViewMathModel createTestModel(){
