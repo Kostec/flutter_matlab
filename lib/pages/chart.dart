@@ -82,11 +82,10 @@ class MyChart{
   List<ChartData> _chartData = [];
   double maxX;
   double maxY;
+  double minX;
+  double minY;
 
   String name;
-
-  double previousMaxX;
-  double previousMaxY;
 
   MyChart({this.name});
 
@@ -94,18 +93,25 @@ class MyChart{
     if (_chartData.length == 0){
       maxX = data.time;
       maxY = data.value;
+      minX = data.time;
+      minY = data.value;
     }
     _chartData.add(data);
     if (data.value > maxY) maxY = data.value;
     if (data.time > maxX) maxX = data.time;
+    if (data.value < minY) minY = data.value;
+    if (data.time < minX) minX = data.time;
   }
 
   LineChart buildChart() {
+    if (minY == maxY){
+      minY = minY - 5;
+      maxY = maxY +5;
+    }
+
     return LineChart(LineChartData(
       lineTouchData: LineTouchData(
-        touchTooltipData: LineTouchTooltipData(
-          tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
-        ),
+        touchTooltipData: LineTouchTooltipData(tooltipBgColor: Colors.blueGrey.withOpacity(0.8),),
         touchCallback: (LineTouchResponse touchResponse) {},
         handleBuiltInTouches: true,
       ),
@@ -115,39 +121,15 @@ class MyChart{
         bottomTitles: SideTitles(
           showTitles: true,
           reservedSize: 22,
-          textStyle: const TextStyle(
-            color: Color(0xff72719b),
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
+          textStyle: const TextStyle(color: Color(0xff72719b), fontWeight: FontWeight.bold, fontSize: 16,),
           margin: 10,
-          getTitles: (value) { // цифры на оси X
-            if (value == maxX)
-              return value.toString();
-            switch (value.toInt()) {
-              case 0:
-              case 2:
-              case 4:
-              case 6:
-              case 8:
-              case 10:
-              case 12:
-                return value.toString();
-            }
-            return '';
-          },
+          interval: (_chartData.length/10000).toDouble(),
         ),
         // ось Y
         leftTitles: SideTitles(
           showTitles: true,
-          textStyle: const TextStyle(
-            color: Color(0xff75729e),
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-          ),
-          getTitles: (value) { // цифры на оси Y
-            return value.toString();
-          },
+          textStyle: const TextStyle(color: Color(0xff75729e), fontWeight: FontWeight.bold, fontSize: 14,),
+          interval: maxY/5,
           margin: 8,
           reservedSize: 30,
         ),
@@ -156,25 +138,16 @@ class MyChart{
       borderData: FlBorderData(
         show: true,
         border: const Border(
-          bottom: BorderSide(
-            color: Color(0xff4e4965),
-            width: 4,
-          ),
-          left: BorderSide(
-            color: Colors.transparent,
-          ),
-          right: BorderSide(
-            color: Colors.transparent,
-          ),
-          top: BorderSide(
-            color: Colors.transparent,
-          ),
+          bottom: BorderSide(color: Color(0xff4e4965), width: 4,),
+          left: BorderSide(color: Colors.transparent,),
+          right: BorderSide(color: Colors.transparent,),
+          top: BorderSide(color: Colors.transparent,),
         ),
       ),
-      minY: -1.5,
-      maxY: maxY + 1.5,
-      maxX: maxX + 1.5,
-      minX: 0,
+      minY: minY,
+      maxY: maxY,
+      maxX: maxX,
+      minX: minX,
       lineBarsData: _buildLineChartBar(),
     ));
   }
