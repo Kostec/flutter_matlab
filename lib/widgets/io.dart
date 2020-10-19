@@ -11,7 +11,7 @@ class IOWidget extends StatefulWidget{
   BuildContext context;
 
   BlockIO io;
-  IOWidget(this.io);
+  IOWidget(this.io,);
 
   IOGestureCallback gestureCallback;
 
@@ -26,6 +26,7 @@ class IOWidgetState extends State<IOWidget>{
 
   @override
   Widget build(BuildContext context) {
+    print("key = ${widget.key}");
     widget.context = context;
     return widget.io is PortInput ? _buildInput() : _buildOutput();
   }

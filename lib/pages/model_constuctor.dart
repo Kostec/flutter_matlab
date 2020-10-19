@@ -35,10 +35,7 @@ class ModelPage extends StatefulWidget{
 class _ModelPageState extends State<ModelPage>{
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-  Path path;
-  Paint paint;
-  Canvas canvas;
+  final GlobalKey bodyKey = GlobalKey();
 
   double width = 2048;
   double heigh = 2048;
@@ -46,6 +43,10 @@ class _ModelPageState extends State<ModelPage>{
   Map<String, Function> moreItems;
 
   List<Widget> lines = [];
+  List<Widget> blocks = [];
+  List<Widget> stackChild = [];
+
+  bool _builded = false;
 
   @override
   void initState() {
@@ -53,34 +54,14 @@ class _ModelPageState extends State<ModelPage>{
     createTestModel();
     addEvents();
 
-//    SchedulerBinding.instance.addPostFrameCallback((_){
-//      IOWidget ioWidget = ((workspace.selectedMathModel.blockWidgets[0] as PositionedBlockWidget).outputs[0] as IOWidget);
-//
-//      workspace.selectedMathModel.blockWidgets.forEach((blockWidget) {
-//        blockWidget.block.Inputs.forEach((input) {
-//          var output = workspace.selectedMathModel.blockWidgets.firstWhere( (w) => w.block.Outputs.contains(input.connectedTo), orElse: () => null);
-//          if (output != null){
-//
-//            IOWidget inputWidget = blockWidget.inputs.firstWhere((i) => (i as IOWidget).io == input, orElse: () => null);
-//            IOWidget outputWidget = output.outputs.firstWhere((o) => (o as IOWidget).io == input.connectedTo, orElse: () => null);
-//
-//            if (inputWidget != null && outputWidget != null) {
-//              RenderBox inputBox = inputWidget.context.findRenderObject() as RenderBox;
-//              RenderBox outpuBox = outputWidget.context.findRenderObject() as RenderBox;
-//
-//              Offset inputOffset = inputBox.localToGlobal(Offset.zero);
-//              Offset outputOffset = outpuBox.localToGlobal(Offset.zero);
-//
-//              AddLine(inputOffset.dx, inputOffset.dy, outputOffset.dx,
-//                  outputOffset.dy);
-//            }
-//          }
-//        });
-//      });
-//
-//      List<Widget> child = [];
-//      child.addAll(lines);
-//    });
+    SchedulerBinding.instance.addPostFrameCallback((_){
+      _builded = true;
+      _buildLines();
+      setState(() {
+
+      });
+    });
+
   }
 
   ViewMathModel createTestModel(){
@@ -99,12 +80,13 @@ class _ModelPageState extends State<ModelPage>{
     double countY = 20;
 
     (constant.Outputs[0] as PortOutput).connect(transfer.Inputs[0]);
-    (constant.Outputs[0] as PortOutput).connect(integrator.Inputs[0]);
+//    (constant.Outputs[0] as PortOutput).connect(integrator.Inputs[0]);
 
     blocks.forEach((block) {
       workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: countX, y: countY, block: block));
       countX += 150;
     });
+
     return model;
   }
 
@@ -169,40 +151,74 @@ class _ModelPageState extends State<ModelPage>{
   }
 
   Widget _buildBody(){
-    var widgets = workspace.selectedMathModel.blockWidgets;
-
-    lines.clear();
-    List<Widget> child = [];
-
-//    for(int i = 0; i < widgets.length; i++)
-//    {
-//      widgets[i].block.Inputs.forEach((element) {
-//        var cl = widgets.firstWhere( (w) => w.block.Outputs.contains(element.connectedTo), orElse: () => null);
-//        if (cl != null){
-//          var y =  cl.y -  widgets[i].y;
-//          var x =  cl.x -  widgets[i].x;
-//          AddLine(widgets[i].x, widgets[i].y, x, y);
-//        }
-//      });
-//    }
-
-    workspace.selectedMathModel.blockWidgets.forEach((element) {
-      child.add(element);
-    });
+    blocks = [];
+    workspace.selectedMathModel.blockWidgets.forEach((element) => blocks.add(element));
+    if (_builded) _buildLines();
+    stackChild = [];
+    stackChild.addAll(blocks);
+    stackChild.addAll(lines);
 
     return GestureDetector(
       onTapDown: (details) => print('OnTap'),
       child: Zoom(
+        key: bodyKey,
         width: width,
         height: heigh,
         doubleTapZoom: true,
         enableScroll: true,
-        child: Stack(children: child,),
+        child: Stack(children: stackChild,),
     ));
   }
 
+  void _buildLines(){
+    lines = [];
+    workspace.selectedMathModel.blockWidgets.forEach((blockWidget) {
+      blockWidget.block.Inputs.forEach((input) {
+        var output = workspace.selectedMathModel.blockWidgets.firstWhere( (w) => w.block.Outputs.contains(input.connectedTo), orElse: () => null);
+        if (output != null){
+
+          IOWidget inputWidget = blockWidget.inputs.firstWhere((i) => (i as IOWidget).io == input, orElse: () => null);
+          IOWidget outputWidget = output.outputs.firstWhere((o) => (o as IOWidget).io == input.connectedTo, orElse: () => null);
+
+          if (inputWidget != null && outputWidget != null) {
+            if (inputWidget.context != null && outputWidget.context != null) {
+              RenderBox inputBox = inputWidget.context.findRenderObject() as RenderBox;
+              RenderBox outpuBox = outputWidget.context.findRenderObject() as RenderBox;
+
+              var thisBox = bodyKey.currentContext.findRenderObject() as RenderBox;
+              Offset thisOffset = thisBox.localToGlobal(Offset.zero);
+              print('this: ${thisOffset.dx}, ${thisOffset.dy}');
+
+              var outputWidgetRB = output.context.findRenderObject() as RenderBox;
+              var outSize = outputWidgetRB.size;
+              var oOffset = outputWidgetRB.localToGlobal(Offset(-thisOffset.dx, -thisOffset.dy));
+
+              var inputWidgetRB = blockWidget.context.findRenderObject() as RenderBox;
+              var inSize = inputWidgetRB.size;
+              var iOffset = outputWidgetRB.localToGlobal(Offset(-thisOffset.dx, -thisOffset.dy));
+
+              Offset inOffset = Offset(-35, -105);
+              Offset outOffset = Offset(-thisOffset.dx, -thisOffset.dy);
+
+              Offset inputOffset = inputBox.localToGlobal(Offset.zero);
+              Offset outputOffset = outpuBox.localToGlobal(outOffset);
+
+//              AddLine(inputOffset.dx, inputOffset.dy, outputOffset.dx, outputOffset.dy);
+              AddLine(inputOffset.dx, inputOffset.dy, inputOffset.dx - 10, inputOffset.dy);
+
+              print('input: ${inputOffset.dx}, ${inputOffset.dy}, output: ${outputOffset.dx}, ${outputOffset.dy}');
+            }
+            else{
+              print("inputWidget: ${inputWidget.context != null}, outputWidget: ${outputWidget.context != null}");
+            }
+          }
+        }
+      });
+    });
+  }
+
   void AddLine(double start_x, double start_y, double end_x, double end_y){
-    lines.add(Positioned(top: start_y, left: start_x,child: CustomPaint(size: Size(0,0), painter: MyPainter(30, 25, end_x, end_y),)));
+    lines.add(Positioned(top: start_y, left: start_x,child: CustomPaint(size: Size(0,0), painter: MyPainter(start_x, start_y, end_x, end_y),)));
   }
 
   void showAddBlockDialog(BuildContext context) {

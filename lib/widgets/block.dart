@@ -18,6 +18,8 @@ class PositionedBlockWidget extends StatefulWidget{
   List<Widget> outputs = [];
   ConnectionCallback connectionCallback;
 
+  BuildContext context;
+
   IOGestureCallback ioGestureCallback;
 
   PositionedBlockWidget({this.x, this.y, this.block, this.canOpenPreference = true});
@@ -55,10 +57,11 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
 
   @override
   Widget build(BuildContext context) {
+
     blockWidget = BlockWidget(block: block,);
     widget.inputs = blockWidget.inputs;
     widget.outputs = blockWidget.outputs;
-
+    widget.context = context;
     blockWidget.inputs.forEach((input) {
       (input as IOWidget).gestureCallback = IOGestureCallBack;
     });
@@ -170,6 +173,7 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
 
 class BlockWidget extends StatefulWidget{
   Block block;
+
   List<Widget> inputs = [];
   List<Widget> outputs = [];
   BlockWidget({this.block});
@@ -240,8 +244,9 @@ class _BlockWidgetState extends State<BlockWidget>{
     inputs.clear();
     inputNames.clear();
     for (int i = 0; i < block.numIn; i++){
-      inputs.add(IOWidget(_inputs[i]));
-      widget.inputs.add(IOWidget(_inputs[i]));
+      var ioWidget = IOWidget(_inputs[i]);
+      inputs.add(ioWidget);
+      widget.inputs.add(ioWidget);
       inputNames.add(Container(
           padding: EdgeInsets.all(2),
           child: Center(child: Text('${_inputs[i].name}')),
@@ -254,8 +259,9 @@ class _BlockWidgetState extends State<BlockWidget>{
     outputs.clear();
     outputNames.clear();
     for (int i = 0; i < block.numOut; i++){
-      outputs.add(IOWidget(_outputs[i]));
-      widget.outputs.add(IOWidget(_outputs[i]));
+      var ioWidget = IOWidget(_outputs[i]);
+      outputs.add(ioWidget);
+      widget.outputs.add(ioWidget);
       outputNames.add(Container(
         padding: EdgeInsets.all(2),
         child: Center(child: Text('${_outputs[i].name}')),
