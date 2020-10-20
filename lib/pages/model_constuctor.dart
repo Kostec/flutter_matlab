@@ -40,6 +40,11 @@ class _ModelPageState extends State<ModelPage>{
   double width = 2048;
   double heigh = 2048;
 
+  double scaleX = 1;
+  double scaleY = 1;
+
+  Offset zoomOffset = Offset.zero;
+
   Map<String, Function> moreItems;
 
   List<Widget> lines = [];
@@ -155,61 +160,57 @@ class _ModelPageState extends State<ModelPage>{
     workspace.selectedMathModel.blockWidgets.forEach((element) => blocks.add(element));
     if (_builded) _buildLines();
     stackChild = [];
-    stackChild.addAll(blocks);
     stackChild.addAll(lines);
+    stackChild.addAll(blocks);
 
     return GestureDetector(
       onTapDown: (details) => print('OnTap'),
       child: Zoom(
-        key: bodyKey,
         width: width,
         height: heigh,
         doubleTapZoom: true,
         enableScroll: true,
-        child: Stack(children: stackChild,),
+        onScaleUpdate: (x,y){
+          scaleX = x;
+          scaleY = y;
+          print('scale: $x, $y');
+        },
+        onPositionUpdate: (offset){
+          zoomOffset = offset;
+          print('position: ${offset.dx}, ${offset.dy}');
+        },
+        child: Stack(key: bodyKey, children: stackChild,),
     ));
   }
 
   void _buildLines(){
     lines = [];
     workspace.selectedMathModel.blockWidgets.forEach((blockWidget) {
-      blockWidget.block.Inputs.forEach((input) {
-        var output = workspace.selectedMathModel.blockWidgets.firstWhere( (w) => w.block.Outputs.contains(input.connectedTo), orElse: () => null);
+      blockWidget.block.Inputs.forEach((inputIO) {
+        var output = workspace.selectedMathModel.blockWidgets.firstWhere( (w) => w.block.Outputs.contains(inputIO.connectedTo), orElse: () => null);
         if (output != null){
+          IOWidget inputIOWidget = blockWidget.inputs.firstWhere((i) => (i as IOWidget).io == inputIO, orElse: () => null);
+          IOWidget outputIOWidget = output.outputs.firstWhere((o) => (o as IOWidget).io == inputIO.connectedTo, orElse: () => null);
+          if (inputIOWidget != null && outputIOWidget != null) {
+            if (inputIOWidget.context != null && outputIOWidget.context != null) {
+              RenderBox inputIOBox = inputIOWidget.context.findRenderObject() as RenderBox;
+              RenderBox inputRenderBox = blockWidget.context.findRenderObject() as RenderBox;
 
-          IOWidget inputWidget = blockWidget.inputs.firstWhere((i) => (i as IOWidget).io == input, orElse: () => null);
-          IOWidget outputWidget = output.outputs.firstWhere((o) => (o as IOWidget).io == input.connectedTo, orElse: () => null);
+              RenderBox outputIOBox = outputIOWidget.context.findRenderObject() as RenderBox;
+              RenderBox outputRenderBox = output.context.findRenderObject() as RenderBox;
 
-          if (inputWidget != null && outputWidget != null) {
-            if (inputWidget.context != null && outputWidget.context != null) {
-              RenderBox inputBox = inputWidget.context.findRenderObject() as RenderBox;
-              RenderBox outpuBox = outputWidget.context.findRenderObject() as RenderBox;
+              double inX = blockWidget.x/2 + inputIOBox.size.width/4;
+              double inY = blockWidget.y/2 + inputRenderBox.size.height/4 - inputIOBox.size.height/4;
+              double outX = output.x/2 + outputRenderBox.size.width/2 - outputIOBox.size.width/4;
+              double outY = output.y/2 + outputRenderBox.size.height/4 - outputIOBox.size.height/4;
 
-              var thisBox = bodyKey.currentContext.findRenderObject() as RenderBox;
-              Offset thisOffset = thisBox.localToGlobal(Offset.zero);
-              print('this: ${thisOffset.dx}, ${thisOffset.dy}');
+              AddLine(inX, inY, outX, outY);
+              AddLine(outX, outY, inX, inY);
 
-              var outputWidgetRB = output.context.findRenderObject() as RenderBox;
-              var outSize = outputWidgetRB.size;
-              var oOffset = outputWidgetRB.localToGlobal(Offset(-thisOffset.dx, -thisOffset.dy));
-
-              var inputWidgetRB = blockWidget.context.findRenderObject() as RenderBox;
-              var inSize = inputWidgetRB.size;
-              var iOffset = outputWidgetRB.localToGlobal(Offset(-thisOffset.dx, -thisOffset.dy));
-
-              Offset inOffset = Offset(-35, -105);
-              Offset outOffset = Offset(-thisOffset.dx, -thisOffset.dy);
-
-              Offset inputOffset = inputBox.localToGlobal(Offset.zero);
-              Offset outputOffset = outpuBox.localToGlobal(outOffset);
-
-//              AddLine(inputOffset.dx, inputOffset.dy, outputOffset.dx, outputOffset.dy);
-              AddLine(inputOffset.dx, inputOffset.dy, inputOffset.dx - 10, inputOffset.dy);
-
-              print('input: ${inputOffset.dx}, ${inputOffset.dy}, output: ${outputOffset.dx}, ${outputOffset.dy}');
+              print('input: ${blockWidget.x}, ${blockWidget.y}');
             }
             else{
-              print("inputWidget: ${inputWidget.context != null}, outputWidget: ${outputWidget.context != null}");
+              print("inputWidget: ${inputIOWidget.context != null}, outputWidget: ${outputIOWidget.context != null}");
             }
           }
         }
@@ -218,7 +219,7 @@ class _ModelPageState extends State<ModelPage>{
   }
 
   void AddLine(double start_x, double start_y, double end_x, double end_y){
-    lines.add(Positioned(top: start_y, left: start_x,child: CustomPaint(size: Size(0,0), painter: MyPainter(start_x, start_y, end_x, end_y),)));
+    lines.add(Positioned(top: start_y, left: start_x,child: CustomPaint(painter: MyPainter(start_x, start_y, end_x, end_y),)));
   }
 
   void showAddBlockDialog(BuildContext context) {
