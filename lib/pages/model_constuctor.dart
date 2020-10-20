@@ -280,10 +280,18 @@ class _ModelPageState extends State<ModelPage>{
           if (blockIO.type != LastTappedIO.type){
             if (blockIO.type == IOtype.output){
               (blockIO as PortOutput).connect(LastTappedIO);
+
+              var input = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Inputs.contains(LastTappedIO), orElse: () => null);
+              var output = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Outputs.contains(blockIO), orElse: () => null);
+              print('connected ${output.block.name} to ${input.block.name}');
+
               setState(() {});
             }
             else if (LastTappedIO.type == IOtype.output) {
               (LastTappedIO as PortOutput).connect(blockIO);
+              var input = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Inputs.contains(blockIO), orElse: () => null);
+              var output = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Outputs.contains(LastTappedIO), orElse: () => null);
+              print('connected ${output.block.name} to ${input.block.name}');
               setState(() {});
             }
             LastTappedIO == null;
