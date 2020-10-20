@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-
+import 'package:fluttermatlab/other/enums.dart';
 import 'BlockIO.dart';
 
 abstract class Block {

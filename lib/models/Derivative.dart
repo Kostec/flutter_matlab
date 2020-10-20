@@ -1,5 +1,6 @@
 import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/BlockIO.dart';
+import 'package:fluttermatlab/other/enums.dart';
 
 class Derivative extends Block{
   @override

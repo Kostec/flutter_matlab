@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:fluttermatlab/models/BlockIO.dart';
 import 'package:fluttermatlab/other/enums.dart';
 
-typedef IOGestureCallback = Function(BlockIO, GestureEnum);
+typedef IOGestureCallback = Function(BlockIO io, GestureEnum gesture);
 
 class IOWidget extends StatefulWidget{
   static int count = 0;
@@ -33,7 +33,10 @@ class IOWidgetState extends State<IOWidget>{
 
   Widget _buildInput(){
     return GestureDetector(
-      onTap: () => print('input tap'),
+      onTap: (){
+        if (widget.gestureCallback != null) widget.gestureCallback(widget.io, GestureEnum.tap);
+        print('input tap');
+      },
       child: Container(
         padding: EdgeInsets.all(2),
         decoration: BoxDecoration(border: Border.all(color: Colors.black), color: widget.io.connectedTo == null ? Colors.grey : Colors.green),

@@ -18,6 +18,7 @@ import 'package:fluttermatlab/widgets/io.dart';
 import 'package:fluttermatlab/widgets/menu.dart';
 import 'package:fluttermatlab/widgets/line.dart';
 import 'package:zoom_widget/zoom_widget.dart';
+import 'package:fluttermatlab/other/enums.dart';
 
 class ModelPage extends StatefulWidget{
   _ModelPageState _instance;
@@ -85,7 +86,7 @@ class _ModelPageState extends State<ModelPage>{
     double countY = 20;
 
     (constant.Outputs[0] as PortOutput).connect(transfer.Inputs[0]);
-//    (constant.Outputs[0] as PortOutput).connect(integrator.Inputs[0]);
+    (constant.Outputs[0] as PortOutput).connect(integrator.Inputs[0]);
 
     blocks.forEach((block) {
       workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: countX, y: countY, block: block));
@@ -157,7 +158,16 @@ class _ModelPageState extends State<ModelPage>{
 
   Widget _buildBody(){
     blocks = [];
-    workspace.selectedMathModel.blockWidgets.forEach((element) => blocks.add(element));
+    workspace.selectedMathModel.blockWidgets.forEach((block){
+      blocks.add(block);
+      block.inputs.forEach((io) {
+        (io as IOWidget).gestureCallback = BlockGestureCallback;
+      });
+      block.outputs.forEach((io) {
+        (io as IOWidget).gestureCallback = BlockGestureCallback;
+      });
+    });
+
     if (_builded) _buildLines();
     stackChild = [];
     stackChild.addAll(lines);
@@ -262,6 +272,31 @@ class _ModelPageState extends State<ModelPage>{
     workspace.selectedMathModel.removeBlockCallback.remove(BlockWasRemoved);
     workspace.selectedMathModel.addBlockCallback.remove(BlockWasAdded);
   }
+
+  void BlockGestureCallback(BlockIO blockIO, GestureEnum gestureEnum){
+    switch(gestureEnum){
+      case GestureEnum.tap:
+        if (LastTappedIO != null){
+          if (blockIO.type != LastTappedIO.type){
+            if (blockIO.type == IOtype.output){
+              (blockIO as PortOutput).connect(LastTappedIO);
+              setState(() {});
+            }
+            else if (LastTappedIO.type == IOtype.output) {
+              (LastTappedIO as PortOutput).connect(blockIO);
+              setState(() {});
+            }
+            LastTappedIO == null;
+          }
+        }
+        else LastTappedIO = blockIO;
+        break;
+      case GestureEnum.double_tap: break;
+      case GestureEnum.long_press: break;
+    }
+  }
+
+  BlockIO LastTappedIO;
 
   void BlockWasRemoved(PositionedBlockWidget blockWidget){
     print('main remove block');

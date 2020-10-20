@@ -1,6 +1,6 @@
 import 'Block.dart';
+import 'package:fluttermatlab/other/enums.dart';
 
-enum IOtype { input, output }
 
 class BlockIO{
   String name;
@@ -48,6 +48,7 @@ class PortOutput extends BlockIO{
   List<PortInput> connections = [];
 
   void connect(PortInput portIntput){
+    if (portIntput.connectedTo != null) return;
     if (!connections.contains(portIntput)){
       connections.add(portIntput);
       portIntput.connect(this);
