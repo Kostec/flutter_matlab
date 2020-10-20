@@ -296,6 +296,7 @@ class _ModelPageState extends State<ModelPage>{
             }
             LastTappedIO == null;
           }
+          else LastTappedIO = blockIO;
         }
         else LastTappedIO = blockIO;
         break;
