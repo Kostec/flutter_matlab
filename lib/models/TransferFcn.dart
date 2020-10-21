@@ -72,12 +72,10 @@ class TransferFcn extends Block{
     for(int i = 0; i < dens.length; i++){
       this.dens.add(double.parse(dens[i]));
     }
-    print('set');
   }
 
   @override
   List<double> evaluate(double T) {
-    print('Evaluate TransferFcn');
     super.evaluate(T);
     var _in = Inputs[0].value;
     var _out = Outputs[0].value;
@@ -97,7 +95,6 @@ class TransferFcn extends Block{
     _out = (_in - _out) * up / down;
     state[time] = [_out];//.addEntries([new MapEntry(time, [_out])]);
     (Outputs[0] as PortOutput).setValue(_out);
-    print('Transfer: $_out');
     return [_out];
   }
 }

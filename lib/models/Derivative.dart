@@ -28,7 +28,7 @@ class Derivative extends Block{
 
   @override
   List<double> evaluate(double T) {
-    print('Evaluate Integrator');
+//    print('Evaluate Integrator');
     super.evaluate(T);
     var _in = IO.firstWhere((io) => io.type == IOtype.input)?.value;
     var _out = IO.firstWhere((io) => io.type == IOtype.output)?.value;

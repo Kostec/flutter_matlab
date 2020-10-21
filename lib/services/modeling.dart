@@ -2,12 +2,26 @@ import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/BlockIO.dart';
 import 'package:fluttermatlab/services/workspace.dart';
 
+typedef TimeChangeCallback = Function(double currentTime, double startTime, double endTime);
+
 /// Класс предназначен для выполения моделирования
 class Solver{
   double T = 1e-3;
   double startTime = 0.0;
   double endTime = 10.0;
-  double modelingTime = 0;
+  double _modelingTime = 0;
+
+  double get ModelingTime => _modelingTime;
+
+  TimeChangeCallback onTimeChange;
+
+  set ModelingTime(value){
+    _modelingTime = value;
+    if (onTimeChange != null){
+      onTimeChange(value, startTime, endTime);
+    }
+  }
+
   List<Block> model;
 
   /// Делает один шаг моделирования TODO: нужен тип для моделирования (блок)
@@ -19,15 +33,15 @@ class Solver{
     }
   }
 
-  void start_evaluate(){
-    modelingTime = startTime;
+  void start_evaluate() async {
+    ModelingTime = startTime;
     workspace.selectedMathModel.mathModel.blocks.forEach((element) => element.resetState());
     evaluate(workspace.selectedMathModel.mathModel.blocks);
   }
 
   /// Выполняет полное решение системы
   void evaluate(List<Block> blocks) {
-    if (modelingTime == startTime) {
+    if (ModelingTime == startTime) {
       blocks.forEach((block) {
         block.resetState();
       });
@@ -55,11 +69,11 @@ class Solver{
           outs.addAll(temp);
         });
       });
-      modelingTime += T;
-      print('modeling time: $modelingTime');
+      ModelingTime += T;
+      print('modeling time: $ModelingTime');
       evaluate(outs);
     });
-    if (modelingTime <= endTime)
+    if (ModelingTime <= endTime)
       first_evaluate(blocks);
     else
       print('end modeling');

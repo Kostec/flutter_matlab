@@ -138,6 +138,9 @@ class _ModelPageState extends State<ModelPage>{
         IconButton(
           icon: Icon(Icons.play_arrow),
           onPressed: (){
+            workspace.selectedMathModel.mathModel.onTimeChange = (time, start, end){
+              print("time: $time, start: ${start}, end: ${end}");
+            };
             workspace.selectedMathModel.mathModel.Solve();
           },
         ),
@@ -172,9 +175,8 @@ class _ModelPageState extends State<ModelPage>{
     stackChild = [];
     stackChild.addAll(lines);
     stackChild.addAll(blocks);
-
     return GestureDetector(
-      onTapDown: (details) => print('OnTap'),
+      onTapDown: (details) => {},
       child: Zoom(
         width: width,
         height: heigh,
@@ -183,11 +185,9 @@ class _ModelPageState extends State<ModelPage>{
         onScaleUpdate: (x,y){
           scaleX = x;
           scaleY = y;
-          print('scale: $x, $y');
         },
         onPositionUpdate: (offset){
           zoomOffset = offset;
-          print('position: ${offset.dx}, ${offset.dy}');
         },
         child: Stack(key: bodyKey, children: stackChild,),
     ));
@@ -216,11 +216,6 @@ class _ModelPageState extends State<ModelPage>{
 
               AddLine(inX, inY, outX, outY);
               AddLine(outX, outY, inX, inY);
-
-              print('input: ${blockWidget.x}, ${blockWidget.y}');
-            }
-            else{
-              print("inputWidget: ${inputIOWidget.context != null}, outputWidget: ${outputIOWidget.context != null}");
             }
           }
         }
@@ -273,24 +268,24 @@ class _ModelPageState extends State<ModelPage>{
     workspace.selectedMathModel.addBlockCallback.remove(BlockWasAdded);
   }
 
-  void BlockGestureCallback(BlockIO blockIO, GestureEnum gestureEnum){
+  void BlockGestureCallback(IOWidget blockIO, GestureEnum gestureEnum){
     switch(gestureEnum){
       case GestureEnum.tap:
         if (LastTappedIO != null){
-          if (blockIO.type != LastTappedIO.type){
-            if (blockIO.type == IOtype.output){
-              (blockIO as PortOutput).connect(LastTappedIO);
+          if (blockIO.io.type != LastTappedIO.io.type){
+            if (blockIO.io.type == IOtype.output){
+              (blockIO.io as PortOutput).connect(LastTappedIO.io);
 
-              var input = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Inputs.contains(LastTappedIO), orElse: () => null);
-              var output = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Outputs.contains(blockIO), orElse: () => null);
+              var input = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Inputs.contains(LastTappedIO.io), orElse: () => null);
+              var output = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Outputs.contains(blockIO.io), orElse: () => null);
               print('connected ${output.block.name} to ${input.block.name}');
 
               setState(() {});
             }
-            else if (LastTappedIO.type == IOtype.output) {
-              (LastTappedIO as PortOutput).connect(blockIO);
-              var input = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Inputs.contains(blockIO), orElse: () => null);
-              var output = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Outputs.contains(LastTappedIO), orElse: () => null);
+            else if (LastTappedIO.io.type == IOtype.output) {
+              (LastTappedIO.io as PortOutput).connect(blockIO.io);
+              var input = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Inputs.contains(blockIO.io), orElse: () => null);
+              var output = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Outputs.contains(LastTappedIO.io), orElse: () => null);
               print('connected ${output.block.name} to ${input.block.name}');
               setState(() {});
             }
@@ -305,7 +300,7 @@ class _ModelPageState extends State<ModelPage>{
     }
   }
 
-  BlockIO LastTappedIO;
+  IOWidget LastTappedIO;
 
   void BlockWasRemoved(PositionedBlockWidget blockWidget){
     print('main remove block');

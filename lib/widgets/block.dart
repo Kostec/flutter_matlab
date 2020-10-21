@@ -49,7 +49,6 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
   void initState() {
     dialogItems = {
       'Перенос' : transmitSwitch,
-      'Подключить' : connectIt,
       'Параметры' : openPreference,
       'Удалить': remove,
     };
@@ -156,17 +155,13 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
     endTransmitting();
     Navigator.pop(context);
   }
-  void connectIt() {
-    if (widget.connectionCallback != null) widget.connectionCallback(block);
-    print('connect');
-  }
   void remove(){
     workspace.selectedMathModel.removeBlock(block);
     Navigator.of(context).pop();
   }
 
-  void IOGestureCallBack(BlockIO io, GestureEnum type){
-    print('IOGestureCallBack ${io.num} ${io.type}');
+  void IOGestureCallBack(IOWidget io, GestureEnum type){
+    print('IOGestureCallBack ${io.io.num} ${io.io.type}');
     if (widget.ioGestureCallback != null) widget.ioGestureCallback(io, type);
   }
 }

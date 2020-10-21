@@ -6,25 +6,22 @@ import 'package:fluttermatlab/widgets/block.dart';
 import 'Block.dart';
 
 class MathModel{
+
+  TimeChangeCallback onTimeChange;
+
   List<Block> blocks;
   MathModel({ this.blocks}){
     this.blocks = this.blocks ?? [];
   }
-  void Solve(){
+  void Solve() async {
     Solver solver = Solver();
-    solver.start_evaluate();
+    solver.onTimeChange = onTimeChange;
+    await solver.start_evaluate();
   }
   void addBlock(Block block){
     blocks.add(block);
   }
   void removeBlock(Block block){
-//    block.Inputs.forEach((input) {
-//      block.removeInput(input);
-//    });
-//
-//    block.Outputs.forEach((output) {
-//      block.removeInput(output);
-//    });
     blocks.remove(block);
     print('was removed ${block.name}');
   }

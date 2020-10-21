@@ -16,7 +16,7 @@ class Constant extends Block{
     super.evaluate(T);
     state.addEntries([new MapEntry(time, [value])]);
     (Outputs[0] as PortOutput).setValue(value);
-    print('constant time: $time');
+//    print('constant time: $time');
     return [value];
   }
 
