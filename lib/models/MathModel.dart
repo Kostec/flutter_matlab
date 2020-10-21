@@ -9,12 +9,14 @@ class MathModel{
 
   TimeChangeCallback onTimeChange;
 
+  Solver solver;
+
   List<Block> blocks;
   MathModel({ this.blocks}){
     this.blocks = this.blocks ?? [];
   }
   void Solve() async {
-    Solver solver = Solver();
+    solver = Solver();
     solver.onTimeChange = onTimeChange;
     await solver.start_evaluate();
   }

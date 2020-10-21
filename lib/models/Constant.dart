@@ -14,7 +14,8 @@ class Constant extends Block{
   @override
   List<double> evaluate(double T) {
     super.evaluate(T);
-    state.addEntries([new MapEntry(time, [value])]);
+    if (state.length == 0) state.add(0);
+    state[0] = value;
     (Outputs[0] as PortOutput).setValue(value);
 //    print('constant time: $time');
     return [value];

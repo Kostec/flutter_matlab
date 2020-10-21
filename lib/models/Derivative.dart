@@ -34,7 +34,11 @@ class Derivative extends Block{
     var _out = IO.firstWhere((io) => io.type == IOtype.output)?.value;
     _out += (_in - previousValue) / T;
     previousValue = _in;
-    state.addEntries([new MapEntry(time, [_out])]);
+
+    if (state.length == 0) {
+      state.add(0);
+    }
+    state.add(_out);
     return [_out];
   }
 

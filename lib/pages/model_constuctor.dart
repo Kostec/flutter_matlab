@@ -8,6 +8,7 @@ import 'package:fluttermatlab/models/Constant.dart';
 import 'package:fluttermatlab/models/Derivative.dart';
 import 'package:fluttermatlab/models/Integrator.dart';
 import 'package:fluttermatlab/models/MathModel.dart';
+import 'package:fluttermatlab/models/Scope.dart';
 import 'package:fluttermatlab/models/TransferFcn.dart';
 import 'package:fluttermatlab/services/Factory.dart';
 import 'package:fluttermatlab/services/library.dart';
@@ -19,6 +20,7 @@ import 'package:fluttermatlab/widgets/menu.dart';
 import 'package:fluttermatlab/widgets/line.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 import 'package:fluttermatlab/other/enums.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class ModelPage extends StatefulWidget{
   _ModelPageState _instance;
@@ -78,15 +80,19 @@ class _ModelPageState extends State<ModelPage>{
     var constant = new Constant(value: 3);
     var transfer = new TransferFcn(nums: [1], dens: [1,1]);
     var integrator = new Integrator(coef: 2.1);
+    var scope = new Scope(numIn: 2);
+
 
     blocks.add(constant);
     blocks.add(transfer);
     blocks.add(integrator);
+    blocks.add(scope);
     double countX = 20;
     double countY = 20;
 
     (constant.Outputs[0] as PortOutput).connect(transfer.Inputs[0]);
     (constant.Outputs[0] as PortOutput).connect(integrator.Inputs[0]);
+    (integrator.Outputs[0] as PortOutput).connect(scope.Inputs[0]);
 
     blocks.forEach((block) {
       workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: countX, y: countY, block: block));
@@ -96,6 +102,8 @@ class _ModelPageState extends State<ModelPage>{
     return model;
   }
 
+  int progressStep = 0;
+  int totalStep = 100;
   @override
   Widget build(BuildContext context) {
     var _drawer = MainMenu.menu;
@@ -113,7 +121,6 @@ class _ModelPageState extends State<ModelPage>{
             child: Icon(Icons.add),
             onPressed: (){
               addBlock();
-//              scaffoldKey.currentState.showBottomSheet((context) => Container(height: 200, child: Text('Text'),));
             },
           ),
     )]);
@@ -140,6 +147,10 @@ class _ModelPageState extends State<ModelPage>{
           onPressed: (){
             workspace.selectedMathModel.mathModel.onTimeChange = (time, start, end){
               print("time: $time, start: ${start}, end: ${end}");
+              totalStep = 100;
+              progressStep = (time/end * 100).toInt();
+              print('progressStep: $progressStep');
+              setState(() { });
             };
             workspace.selectedMathModel.mathModel.Solve();
           },
@@ -156,6 +167,27 @@ class _ModelPageState extends State<ModelPage>{
           }
         )
       ],
+      bottom: PreferredSize(child :
+        StepProgressIndicator(
+          totalSteps: totalStep,
+          currentStep: progressStep,
+          size: 8,
+          padding: 0,
+          selectedColor: Colors.yellow,
+          unselectedColor: Colors.cyan,
+          roundedEdges: Radius.circular(10),
+          selectedGradientColor: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.yellowAccent, Colors.deepOrange],
+          ),
+          unselectedGradientColor: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.black, Colors.blue],
+          ),
+        ),
+      )
     );
   }
 

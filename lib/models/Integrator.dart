@@ -35,7 +35,10 @@ class Integrator extends Block{
     super.evaluate(T);
     double _in = Inputs[0].value;
     double _out = Outputs[0].value;
-    if (state.length == 0) _out = initValue;
+    if (state.length == 0) {
+      _out = initValue;
+      state.add(initValue);
+    }
     if (_in == null || _out == null) {
       Inputs[0].value = 0;
       (Outputs[0] as PortOutput).setValue(0);
@@ -43,7 +46,7 @@ class Integrator extends Block{
     }
     _out += _in * T;
     previousValue = _in;
-    state[time] = [_out];
+    state[0] = _out;
     (Outputs[0] as PortOutput).setValue(_out);
     return [_out];
   }

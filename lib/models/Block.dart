@@ -9,7 +9,7 @@ abstract class Block {
   Block({this.name = 'Block'});
   List<BlockIO> IO = [];
   double time = 0;
-  Map<double, List<double>> state = {};
+  List<double> state = [];
 
   List<BlockIO> get Inputs{
     return IO.where((io) => io.type == IOtype.input).toList();

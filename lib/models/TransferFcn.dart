@@ -93,7 +93,11 @@ class TransferFcn extends Block{
       down += dens[i] * pow(T, i);
     }
     _out = (_in - _out) * up / down;
-    state[time] = [_out];//.addEntries([new MapEntry(time, [_out])]);
+
+    if (state.length == 0){
+      state.add(_out);
+    }
+    state[0] = _out;//.addEntries([new MapEntry(time, [_out])]);
     (Outputs[0] as PortOutput).setValue(_out);
     return [_out];
   }

@@ -3,12 +3,12 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttermatlab/models/Scope.dart';
 import 'package:fluttermatlab/services/workspace.dart';
 import 'package:fluttermatlab/widgets/menu.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class ChartPage extends StatefulWidget{
-
   @override
   State createState() {
     return _ChartPageState();
@@ -29,13 +29,19 @@ class _ChartPageState extends State<ChartPage> {
   @override
   void initState() {
 
-    workspace.selectedMathModel.mathModel.blocks.forEach((block) {
-      var chart = MyChart(name: block.name);
-      block.state.forEach((key, value) {
-        chart.addChartData(ChartData(time: key, value: value[0]));
-      });
-      charts.add(chart);
-      column.add(chart.buildChart());
+    var scopes = workspace.selectedMathModel.mathModel.blocks.where((element) => element is Scope);
+    scopes.forEach((scope) {
+      for (int i = 0; i < (scope as Scope).stateInputs.length; i++){
+        var input = (scope as Scope).stateInputs[i] ;
+        MyChart chart = MyChart(name: 'scope.name in$i');
+        input.forEach((key, listInputs) {
+          listInputs.forEach((value) {
+            chart.addChartData(ChartData(time: key, value: value));
+          });
+        });
+        charts.add(chart);
+        column.add(chart.buildChart());
+      }
     });
   }
 

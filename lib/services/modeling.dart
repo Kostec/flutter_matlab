@@ -8,7 +8,7 @@ typedef TimeChangeCallback = Function(double currentTime, double startTime, doub
 class Solver{
   double T = 1e-3;
   double startTime = 0.0;
-  double endTime = 10.0;
+  double endTime = 5.0;
   double _modelingTime = 0;
 
   double get ModelingTime => _modelingTime;

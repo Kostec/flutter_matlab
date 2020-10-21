@@ -8,11 +8,11 @@ class Scope extends Block{
   int numOut = 0;
   @override
   String name;
-  Map<int, List<double>> stateInputs = {};
+  Map<int, Map<double, List<double>>> stateInputs = {};
 
   Scope({this.numIn = 1, this.name = 'Scope'}){
     for(int i = 0; i < numIn; i++){
-      stateInputs[i] = [];
+      stateInputs[i] = {};
     }
     setDefaultIO();
   }
@@ -38,10 +38,10 @@ class Scope extends Block{
 
   @override
   List<double> evaluate(double T) {
-    var _in = Inputs;
-    for(int i = 0; i < _in.length; i++){
-      //TODO
-//      stateInputs[i] = _in[i].connectedTo.state.values.cast<double>().toList();
+    var _inputs = Inputs;
+    for(int i = 0; i < _inputs.length; i++){
+      stateInputs[i].addEntries([new MapEntry(time, [_inputs[i].value])]);
     }
+    super.evaluate(T);
   }
 }
