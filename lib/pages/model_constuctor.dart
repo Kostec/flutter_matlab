@@ -144,8 +144,14 @@ class _ModelPageState extends State<ModelPage>{
         ),
         IconButton(
           icon: Icon(Icons.play_arrow),
-          onPressed: (){
-            workspace.selectedMathModel.mathModel.onTimeChange = (time, start, end){
+          onPressed: () async {
+
+            totalStep = 100;
+            progressStep = 0;
+            print('progressStep: $progressStep');
+            setState(() { });
+
+            workspace.selectedMathModel.mathModel.onTimeChange = (time, start, end) async {
               print("time: $time, start: ${start}, end: ${end}");
               totalStep = 100;
               progressStep = (time/end * 100).toInt();
@@ -167,8 +173,9 @@ class _ModelPageState extends State<ModelPage>{
           }
         )
       ],
-      bottom: PreferredSize(child :
-        StepProgressIndicator(
+      bottom: PreferredSize(
+        preferredSize: Size(0,8),
+        child : StepProgressIndicator(
           totalSteps: totalStep,
           currentStep: progressStep,
           size: 8,
@@ -240,6 +247,11 @@ class _ModelPageState extends State<ModelPage>{
 
               RenderBox outputIOBox = outputIOWidget.context.findRenderObject() as RenderBox;
               RenderBox outputRenderBox = output.context.findRenderObject() as RenderBox;
+
+              int inputsCount = blockWidget.inputs.length;
+              int outputsCount = output.outputs.length;
+
+              int idx = blockWidget.inputs.indexOf(inputIOWidget);
 
               double inX = blockWidget.x/2 + inputIOBox.size.width/4;
               double inY = blockWidget.y/2 + inputRenderBox.size.height/4 - inputIOBox.size.height/4;

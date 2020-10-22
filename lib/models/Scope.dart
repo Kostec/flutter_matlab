@@ -10,6 +10,8 @@ class Scope extends Block{
   String name;
   Map<int, Map<double, List<double>>> stateInputs = {};
 
+  double T;
+
   Scope({this.numIn = 1, this.name = 'Scope'}){
     for(int i = 0; i < numIn; i++){
       stateInputs[i] = {};
