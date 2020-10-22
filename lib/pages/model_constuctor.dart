@@ -5,7 +5,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/BlockIO.dart';
 import 'package:fluttermatlab/models/Constant.dart';
-import 'package:fluttermatlab/models/Derivative.dart';
 import 'package:fluttermatlab/models/Integrator.dart';
 import 'package:fluttermatlab/models/MathModel.dart';
 import 'package:fluttermatlab/models/Scope.dart';
@@ -210,9 +209,13 @@ class _ModelPageState extends State<ModelPage>{
       blocks.add(block);
       block.positionChangedCallback = (x,y) => setState(() => {});
       block.inputs.forEach((io) {
+        (io as IOWidget).onConnect = IOWidgetConnectOrDisconnectIO;
+        (io as IOWidget).onDisconnect = IOWidgetConnectOrDisconnectIO;
         (io as IOWidget).gestureCallback = BlockGestureCallback;
       });
       block.outputs.forEach((io) {
+        (io as IOWidget).onDisconnect = IOWidgetConnectOrDisconnectIO;
+        (io as IOWidget).onConnect = IOWidgetConnectOrDisconnectIO;
         (io as IOWidget).gestureCallback = BlockGestureCallback;
       });
     });
@@ -372,6 +375,10 @@ class _ModelPageState extends State<ModelPage>{
   }
   void BlockWasAdded(PositionedBlockWidget blockWidget){
     print('main add block');
+    setState(() { });
+  }
+
+  void IOWidgetConnectOrDisconnectIO(IOWidget io){
     setState(() { });
   }
 

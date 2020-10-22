@@ -1,18 +1,21 @@
-import 'Block.dart';
 import 'package:fluttermatlab/other/enums.dart';
 
+typedef PortIOCallback = Function(PortIO io);
 
-class BlockIO{
+class PortIO{
   String name;
   int num;
   IOtype type;
   double value;
-  BlockIO connectedTo;
-  BlockIO({this.name = 'IO'});
+  PortIO connectedTo;
+  PortIO({this.name = 'IO'});
   void disconnect() {}
+
+  PortIOCallback onDisconnect = (io) => {};
+  PortIOCallback onConnect = (io) => {};
 }
 
-class PortInput extends BlockIO{
+class PortInput extends PortIO{
   IOtype type = IOtype.input;
   PortInput({num, name = 'In'}){
     this.num = num;
@@ -23,6 +26,7 @@ class PortInput extends BlockIO{
     if (connectedTo != portOutput){
       connectedTo = portOutput;
       portOutput.connect(this);
+      onConnect(this);
     }
     else print('Уже подключено');
   }
@@ -33,11 +37,12 @@ class PortInput extends BlockIO{
       PortOutput portOutput = connectedTo;
       connectedTo = null;
       portOutput.disconnectPort(this);
+      onDisconnect(this);
     }
   }
 }
 
-class PortOutput extends BlockIO{
+class PortOutput extends PortIO{
   IOtype type = IOtype.output;
   @override
   PortOutput({num, name = 'Out'}){
@@ -52,6 +57,7 @@ class PortOutput extends BlockIO{
     if (!connections.contains(portIntput)){
       connections.add(portIntput);
       portIntput.connect(this);
+      onConnect(this);
     }
   }
 
@@ -61,13 +67,14 @@ class PortOutput extends BlockIO{
       if (input.connectedTo != this) {
         connections.remove(input);
         input.disconnect();
+        onConnect(this);
       }
     }
   }
 
   @override
   void disconnect(){
-
+    onDisconnect(this);
   }
 
   void setValue(double value){

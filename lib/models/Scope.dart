@@ -44,7 +44,7 @@ class Scope extends Block{
       }
     }
     else{
-      List<BlockIO> toRemove = [];
+      List<PortIO> toRemove = [];
       for (int i = _numIn; i < numIn; i++) {
         stateInputs.remove(i);
         toRemove.add(IO[i]);

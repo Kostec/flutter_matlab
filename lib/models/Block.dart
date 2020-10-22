@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:fluttermatlab/other/enums.dart';
 import 'BlockIO.dart';
 
@@ -7,15 +6,15 @@ abstract class Block {
   int numIn = 0;
   String name;
   Block({this.name = 'Block'});
-  List<BlockIO> IO = [];
+  List<PortIO> IO = [];
   double time = 0;
   List<double> state = [];
 
-  List<BlockIO> get Inputs{
+  List<PortIO> get Inputs{
     return IO.where((io) => io.type == IOtype.input).toList();
   }
 
-  List<BlockIO> get Outputs{
+  List<PortIO> get Outputs{
     return IO.where((io) => io.type == IOtype.output).toList();
   }
 

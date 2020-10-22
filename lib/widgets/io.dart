@@ -5,6 +5,8 @@ import 'package:fluttermatlab/other/enums.dart';
 
 typedef IOGestureCallback = Function(IOWidget io, GestureEnum gesture);
 
+typedef IOWidgetCallback = Function(IOWidget io);
+
 Map<IOPortState, Color> portStateColor = {
   IOPortState.connected : Colors.green,
   IOPortState.disconnected : Colors.grey,
@@ -14,17 +16,15 @@ Map<IOPortState, Color> portStateColor = {
 
 class IOWidget extends StatefulWidget{
 
+  IOWidgetCallback onConnect = (io) => {};
+  IOWidgetCallback onDisconnect = (io) => {};
+
   static IOWidget SelectedPort;
-
   static int count = 0;
-
   BuildContext context;
-
-  BlockIO io;
+  PortIO io;
   IOWidget(this.io,);
-
   IOGestureCallback gestureCallback;
-
   VoidCallback update;
 
   @override
@@ -35,12 +35,30 @@ class IOWidgetState extends State<IOWidget>{
   Color portColor;
   IOPortState portState;
 
-  BlockIO io;
+  PortIO io;
+
+  Map<String, Function> dialogItems = { };
+
 
   @override
   void initState() {
     io = widget.io;
     portColor = portStateColor[portState];
+    io.onConnect = OnPortConnect;
+    io.onDisconnect = OnPortDisconnect;
+
+    dialogItems = {
+      'Отключить' : () {
+        if (io is PortInput)
+          (io as PortInput).disconnect();
+        else if (io is PortOutput) {
+          var out = (io as PortOutput);
+          while (out.connections.length != 0) out.connections[0].disconnect();
+          Navigator.of(context).pop();
+        }
+      },
+      'Отмена' : () => Navigator.of(context).pop(),
+    };
   }
 
   @override
@@ -59,16 +77,13 @@ class IOWidgetState extends State<IOWidget>{
           : IOPortState.connected;
     }
     portColor = portStateColor[portState];
+
     return widget.io is PortInput ? _buildInput() : _buildOutput();
   }
 
   Widget _buildInput(){
     return GestureDetector(
-      onTap: (){
-        if (widget.gestureCallback != null) widget.gestureCallback(widget, GestureEnum.tap);
-
-        print('input tap');
-      },
+      onTap: onTap,
       child: Container(
         width: 40,
         height: 20,
@@ -81,10 +96,7 @@ class IOWidgetState extends State<IOWidget>{
 
   Widget _buildOutput(){
     return GestureDetector(
-        onTap: () {
-        if (widget.gestureCallback != null) widget.gestureCallback(widget, GestureEnum.tap);
-        print('output tap');
-      },
+      onTap: onTap,
       child: Container(
         width: 40,
         height: 20,
@@ -95,9 +107,11 @@ class IOWidgetState extends State<IOWidget>{
     );
   }
 
-  Map<String, Function> dialogItems = {
-    'Подключить' : () => print('connect'),
-  };
+  void onTap(){
+    if (widget.gestureCallback != null) widget.gestureCallback(widget, GestureEnum.tap);
+    print('output tap');
+    if (portState == IOPortState.selected) showDialog(context);
+  }
 
   void showDialog(BuildContext context) {
     showGeneralDialog(
@@ -136,5 +150,15 @@ class IOWidgetState extends State<IOWidget>{
         );
       },
     );
+  }
+
+  void OnPortConnect(PortIO port){
+    setState(() { });
+    widget.onConnect(widget);
+  }
+
+  void OnPortDisconnect(PortIO port){
+    setState(() { });
+    widget.onDisconnect(widget);
   }
 }
