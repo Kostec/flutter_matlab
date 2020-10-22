@@ -28,18 +28,20 @@ class Derivative extends Block{
 
   @override
   List<double> evaluate(double T) {
-//    print('Evaluate Integrator');
-    super.evaluate(T);
-    var _in = IO.firstWhere((io) => io.type == IOtype.input)?.value;
-    var _out = IO.firstWhere((io) => io.type == IOtype.output)?.value;
-    _out += (_in - previousValue) / T;
-    previousValue = _in;
-
-    if (state.length == 0) {
+    if (state.length < 2) {
       state.add(0);
+      state.add(0);
+      previousValue = 0;
     }
-    state.add(_out);
-    return [_out];
+
+    var _in = IO.firstWhere((io) => io.type == IOtype.input);
+    var _out = IO.firstWhere((io) => io.type == IOtype.output);
+    (_out as PortOutput).setValue((_in.value - state[1])/T);
+
+    state[1] = _in.value;
+    state[0] = _out.value;
+    super.evaluate(T);
+    return [_out.value];
   }
 
   @override
