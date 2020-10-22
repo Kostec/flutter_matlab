@@ -10,6 +10,8 @@ import 'package:fluttermatlab/services/workspace.dart';
 import 'package:fluttermatlab/widgets/io.dart';
 import 'package:fluttermatlab/other/enums.dart';
 
+typedef PositionChangedCallback = Function(double x, double y);
+
 class PositionedBlockWidget extends StatefulWidget{
   double x; double y;
   Block block;
@@ -18,9 +20,12 @@ class PositionedBlockWidget extends StatefulWidget{
   List<Widget> outputs = [];
   ConnectionCallback connectionCallback;
 
+  PositionChangedCallback positionChangedCallback;
+
   BuildContext context;
 
   IOGestureCallback ioGestureCallback;
+  VoidCallback update;
 
   PositionedBlockWidget({this.x, this.y, this.block, this.canOpenPreference = true});
 
@@ -56,6 +61,12 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
 
   @override
   Widget build(BuildContext context) {
+
+    widget.update = () {
+      setState(() => {});
+      blockWidget.inputs.forEach((io) => (io as IOWidget).update() );
+      blockWidget.outputs.forEach((io) => (io as IOWidget).update() );
+    };
 
     blockWidget = BlockWidget(block: block,);
     widget.inputs = blockWidget.inputs;
@@ -99,6 +110,10 @@ class _PositionedBlockWidgetState extends State<PositionedBlockWidget>{
       widget.x = this.x;
       widget.y = this.y;
     });
+
+    if (widget.positionChangedCallback != null){
+      widget.positionChangedCallback(widget.x, widget.y);
+    }
   }
   void endTransmitting(){
     this.dx = 0;
@@ -173,6 +188,8 @@ class BlockWidget extends StatefulWidget{
   List<Widget> outputs = [];
   BlockWidget({this.block});
 
+  VoidCallback update;
+
   @override
   State<StatefulWidget> createState() {
     return _BlockWidgetState();
@@ -199,6 +216,8 @@ class _BlockWidgetState extends State<BlockWidget>{
     outputs = widget.outputs;
     inputs = [];
     outputs = [];
+
+    widget.update = () => setState(() {});
   }
   @override
   Widget build(BuildContext context) {

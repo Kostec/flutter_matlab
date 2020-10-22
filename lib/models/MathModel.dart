@@ -48,8 +48,8 @@ class ViewMathModel{
   }
   void removeBlockWidget(PositionedBlockWidget blockWidget){
     print('will be removed ${blockWidget.block.name}');
-    blockWidgets.remove(blockWidget);
-    mathModel.removeBlock(blockWidget.block);
+    if (blockWidgets.contains(blockWidget)) blockWidgets.remove(blockWidget);
+    if (mathModel.blocks.contains(blockWidget.block)) mathModel.removeBlock(blockWidget.block);
     print('endRemove');
     if (this == workspace.selectedMathModel) removeBlockCallback.forEach((element) { element(blockWidget); });
   }

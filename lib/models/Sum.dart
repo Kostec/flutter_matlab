@@ -74,6 +74,9 @@ class Sum extends Block{
 
   @override
   void setPreference(Map<String, dynamic> preference) {
+    Inputs.forEach((io) {
+      io.disconnect();
+    });
     name = preference['name'];
     operators = preference['operators'];
     numIn = operators.length;

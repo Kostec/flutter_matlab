@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:fluttermatlab/models/Block.dart';
 
-import 'model_constuctor.dart';
-
 class BlockPreferencePage extends StatefulWidget{
 
   Block block;

@@ -8,7 +8,7 @@ typedef TimeChangeCallback = Function(double currentTime, double startTime, doub
 class Solver{
   double T = 1e-3;
   double startTime = 0.0;
-  double endTime = 2000.0;
+  double endTime = 10.0;
   double _modelingTime = 0;
 
   double get ModelingTime => _modelingTime;
@@ -33,7 +33,7 @@ class Solver{
     }
   }
 
-  void start_evaluate() {
+  void start_evaluate() async {
     ModelingTime = startTime;
     workspace.selectedMathModel.mathModel.blocks.forEach((element) => element.resetState());
     evaluate(workspace.selectedMathModel.mathModel.blocks);

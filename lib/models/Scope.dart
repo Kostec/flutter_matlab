@@ -33,6 +33,10 @@ class Scope extends Block{
     super.setPreference(preference);
     int _numIn = int.parse(preference['numIn']);
 
+    Inputs.forEach((io) {
+      io.disconnect();
+    });
+
     if (_numIn > numIn) {
       for (int i = numIn; i < _numIn; i++) {
         stateInputs[i] = {};
