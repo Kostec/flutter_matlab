@@ -33,7 +33,7 @@ class _ChartPageState extends State<ChartPage> {
     scopes.forEach((scope) {
       for (int i = 0; i < (scope as Scope).stateInputs.length; i++){
         var input = (scope as Scope).stateInputs[i] ;
-        MyChart chart = MyChart(name: 'scope.name in$i');
+        MyChart chart = MyChart(name: '${scope.name} in$i');
         input.forEach((key, listInputs) {
           listInputs.forEach((value) {
             chart.addChartData(ChartData(time: key, value: value));

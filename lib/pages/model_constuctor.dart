@@ -18,6 +18,7 @@ import 'package:fluttermatlab/widgets/block.dart';
 import 'package:fluttermatlab/widgets/io.dart';
 import 'package:fluttermatlab/widgets/menu.dart';
 import 'package:fluttermatlab/widgets/line.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 import 'package:fluttermatlab/other/enums.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
@@ -146,17 +147,19 @@ class _ModelPageState extends State<ModelPage>{
           icon: Icon(Icons.play_arrow),
           onPressed: () async {
 
-            totalStep = 100;
             progressStep = 0;
             print('progressStep: $progressStep');
             setState(() { });
 
             workspace.selectedMathModel.mathModel.onTimeChange = (time, start, end) async {
-              print("time: $time, start: ${start}, end: ${end}");
-              totalStep = 100;
-              progressStep = (time/end * 100).toInt();
-              print('progressStep: $progressStep');
-              setState(() { });
+              int currentStep = (time/end * 100).toInt();
+              if (currentStep != progressStep) {
+                print('progressStep: $progressStep');
+                setState(() { progressStep = currentStep; });
+              }
+              if (progressStep >= totalStep){
+                Fluttertoast.showToast(msg: 'Solved', backgroundColor: Colors.green);
+              }
             };
             workspace.selectedMathModel.mathModel.Solve();
           },
@@ -315,36 +318,36 @@ class _ModelPageState extends State<ModelPage>{
   void BlockGestureCallback(IOWidget blockIO, GestureEnum gestureEnum){
     switch(gestureEnum){
       case GestureEnum.tap:
-        if (LastTappedIO != null){
-          if (blockIO.io.type != LastTappedIO.io.type){
+        if (_LastTappedIO != null){
+          if (blockIO.io.type != _LastTappedIO.io.type){
             if (blockIO.io.type == IOtype.output){
-              (blockIO.io as PortOutput).connect(LastTappedIO.io);
+              (blockIO.io as PortOutput).connect(_LastTappedIO.io);
 
-              var input = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Inputs.contains(LastTappedIO.io), orElse: () => null);
+              var input = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Inputs.contains(_LastTappedIO.io), orElse: () => null);
               var output = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Outputs.contains(blockIO.io), orElse: () => null);
               print('connected ${output.block.name} to ${input.block.name}');
 
               setState(() {});
             }
-            else if (LastTappedIO.io.type == IOtype.output) {
-              (LastTappedIO.io as PortOutput).connect(blockIO.io);
+            else if (_LastTappedIO.io.type == IOtype.output) {
+              (_LastTappedIO.io as PortOutput).connect(blockIO.io);
               var input = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Inputs.contains(blockIO.io), orElse: () => null);
-              var output = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Outputs.contains(LastTappedIO.io), orElse: () => null);
+              var output = workspace.selectedMathModel.blockWidgets.firstWhere((b) => b.block.Outputs.contains(_LastTappedIO.io), orElse: () => null);
               print('connected ${output.block.name} to ${input.block.name}');
               setState(() {});
             }
-            LastTappedIO == null;
+            _LastTappedIO == null;
           }
-          else LastTappedIO = blockIO;
+          else _LastTappedIO = blockIO;
         }
-        else LastTappedIO = blockIO;
+        else _LastTappedIO = blockIO;
         break;
       case GestureEnum.double_tap: break;
       case GestureEnum.long_press: break;
     }
   }
 
-  IOWidget LastTappedIO;
+  IOWidget _LastTappedIO;
 
   void BlockWasRemoved(PositionedBlockWidget blockWidget){
     print('main remove block');

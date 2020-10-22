@@ -1,4 +1,5 @@
 import 'package:fluttermatlab/models/Block.dart';
+import 'BlockIO.dart';
 
 class Scope extends Block{
 
@@ -30,7 +31,25 @@ class Scope extends Block{
   @override
   void setPreference(Map<String, dynamic> preference) {
     super.setPreference(preference);
-    numIn = int.parse(preference['numIn']);
+    int _numIn = int.parse(preference['numIn']);
+
+    if (_numIn > numIn) {
+      for (int i = numIn; i < _numIn; i++) {
+        stateInputs[i] = {};
+        IO.add(PortInput(num: i));
+      }
+    }
+    else{
+      List<BlockIO> toRemove = [];
+      for (int i = _numIn; i < numIn; i++) {
+        stateInputs.remove(i);
+        toRemove.add(IO[i]);
+      }
+      toRemove.forEach((element) {
+        IO.remove(element);
+      });
+    }
+    numIn = _numIn;
   }
 
   @override

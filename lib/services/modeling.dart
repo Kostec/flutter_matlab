@@ -8,7 +8,7 @@ typedef TimeChangeCallback = Function(double currentTime, double startTime, doub
 class Solver{
   double T = 1e-3;
   double startTime = 0.0;
-  double endTime = 5.0;
+  double endTime = 2000.0;
   double _modelingTime = 0;
 
   double get ModelingTime => _modelingTime;
@@ -33,7 +33,7 @@ class Solver{
     }
   }
 
-  void start_evaluate() async {
+  void start_evaluate() {
     ModelingTime = startTime;
     workspace.selectedMathModel.mathModel.blocks.forEach((element) => element.resetState());
     evaluate(workspace.selectedMathModel.mathModel.blocks);
@@ -56,27 +56,27 @@ class Solver{
     }
   }
 
-  void first_evaluate(List<Block> blocks){
+  void first_evaluate(List<Block> blocks) async {
     // поиск источников сигнала (они не имеют входов)
-    var inputs = blocks.where((element) => element.Inputs.length == 0).toList();
-    inputs.forEach((input) {
-      input.evaluate(T);
-      List<Block> outs = [];
-      input.Outputs.forEach((io) {
-        var out = io as PortOutput;
-        out.connections.forEach((connection) {
-          var temp = workspace.selectedMathModel.mathModel.blocks.where((block) => block.Inputs.contains(connection));
-          outs.addAll(temp);
+    while (ModelingTime <= endTime) {
+      var inputs = blocks.where((element) => element.Inputs.length == 0)
+          .toList();
+      inputs.forEach((input) {
+        input.evaluate(T);
+        List<Block> outs = [];
+        input.Outputs.forEach((io) {
+          var out = io as PortOutput;
+          out.connections.forEach((connection) {
+            var temp = workspace.selectedMathModel.mathModel.blocks.where((
+                block) => block.Inputs.contains(connection));
+            outs.addAll(temp);
+          });
         });
+        ModelingTime += T;
+        evaluate(outs);
       });
-      ModelingTime += T;
-      print('modeling time: $ModelingTime');
-      evaluate(outs);
-    });
-    if (ModelingTime <= endTime)
-      first_evaluate(blocks);
-    else
-      print('end modeling');
+    }
+    print('end modeling');
   }
 
   List<Block> getNext(List<Block> blocks){

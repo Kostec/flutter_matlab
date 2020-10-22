@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:fluttermatlab/services/modeling.dart';
 import 'package:fluttermatlab/services/workspace.dart';
 import 'package:fluttermatlab/widgets/block.dart';
@@ -15,10 +14,10 @@ class MathModel{
   MathModel({ this.blocks}){
     this.blocks = this.blocks ?? [];
   }
-  void Solve() async {
+  Future<void> Solve() async {
     solver = Solver();
     solver.onTimeChange = onTimeChange;
-    await solver.start_evaluate();
+    solver.start_evaluate();
   }
   void addBlock(Block block){
     blocks.add(block);
