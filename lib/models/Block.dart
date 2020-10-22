@@ -1,4 +1,5 @@
 import 'package:fluttermatlab/other/enums.dart';
+import 'package:fluttermatlab/services/workspace.dart';
 import 'BlockIO.dart';
 
 abstract class Block {
@@ -46,6 +47,19 @@ abstract class Block {
   }
 
   void setPreference(Map<String, dynamic> preference){
+
+    Map<String, dynamic> map = {};
+
+    preference.forEach((key, value) {
+      if (workspace.variables.containsKey(value)){
+        map[key] = workspace.variables[value];
+      }
+    });
+
+    map.forEach((key, value) {
+      preference.remove(key);
+      preference[key] = value;
+    });
     name = preference['name'];
   }
 

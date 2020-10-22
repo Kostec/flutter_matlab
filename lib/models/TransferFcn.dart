@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'Block.dart';
 import 'BlockIO.dart';
+import 'package:fluttermatlab/services/workspace.dart';
 
 class TransferFcn extends Block{
   @override
@@ -64,13 +65,21 @@ class TransferFcn extends Block{
     var nums = numsStr.split(',');
     this.nums.clear();
     for(int i = 0; i < nums.length; i++){
-      this.nums.add(double.parse(nums[i]));
+      String value = nums[i].trim();
+      if (workspace.variables.containsKey(value)) {
+        this.nums.add(double.parse(workspace.variables[value]));
+      }
+      else this.nums.add(double.parse(value));
     }
     var densStr = preference['dens'].toString().replaceAll('[', '').replaceAll(']', '');
     var dens = densStr.split(',');
     this.dens.clear();
     for(int i = 0; i < dens.length; i++){
-      this.dens.add(double.parse(dens[i]));
+      String value = dens[i].trim();
+      if (workspace.variables.containsKey(value)) {
+        this.dens.add(double.parse(workspace.variables[value]));
+      }
+      else this.dens.add(double.parse(value));
     }
   }
 

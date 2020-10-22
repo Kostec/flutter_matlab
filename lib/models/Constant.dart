@@ -35,7 +35,7 @@ class Constant extends Block{
 
   @override
   void setPreference(Map<String, dynamic> preference){
-    name = preference['name'];
+    super.setPreference(preference);
     value = double.parse(preference['value']);
     print('set');
   }
