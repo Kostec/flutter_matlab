@@ -11,6 +11,7 @@ import 'package:fluttermatlab/models/Scope.dart';
 import 'package:fluttermatlab/models/TransferFcn.dart';
 import 'package:fluttermatlab/services/Factory.dart';
 import 'package:fluttermatlab/services/library.dart';
+import 'package:fluttermatlab/services/network.dart';
 import 'package:fluttermatlab/services/workspace.dart';
 import 'package:fluttermatlab/widgets/block.dart';
 import 'package:fluttermatlab/widgets/io.dart';
@@ -145,6 +146,9 @@ class _ModelPageState extends State<ModelPage>{
         IconButton(
           icon: Icon(Icons.play_arrow),
           onPressed: () async {
+
+            // Network.Get();
+
             print('start');
             progressStep = 0;
             print('progressStep: $progressStep');
