@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttermatlab/models/Block.dart';
-import 'package:fluttermatlab/models/BlockIO.dart';
-import 'package:fluttermatlab/models/Constant.dart';
-import 'package:fluttermatlab/models/TransferFcn.dart';
-import 'package:fluttermatlab/pages/chart.dart';
 import 'package:fluttermatlab/pages/model_constuctor.dart';
-import 'package:fluttermatlab/services/modeling.dart';
-import 'package:fluttermatlab/widgets/block.dart';
 
 import 'widgets/menu.dart';
 

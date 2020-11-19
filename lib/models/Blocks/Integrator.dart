@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/BlockIO.dart';
 
@@ -14,7 +13,7 @@ class Integrator extends Block{
 
   double previousValue;
 
-  Integrator({@required this.coef, this.initValue = 0, this.name = 'Integrator'}){
+  Integrator({this.coef, this.initValue = 0, this.name = 'Integrator'}){
     previousValue = initValue;
     setDefaultIO();
   }
@@ -53,7 +52,7 @@ class Integrator extends Block{
 
   @override
   void setPreference(Map<String, dynamic> preference) {
-    coef = preference['name'] == null ? coef : double.parse(preference['name']);
+    name = preference['name'] == null ? name : double.parse(preference['name']);
     coef = preference['coef'] == null ? coef : double.parse(preference['coef']);
     initValue = preference['initValue'] == null ? initValue : double.parse(preference['initValue']);
   }

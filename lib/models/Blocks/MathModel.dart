@@ -1,8 +1,7 @@
+import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/services/modeling.dart';
 import 'package:fluttermatlab/services/workspace.dart';
 import 'package:fluttermatlab/widgets/block.dart';
-
-import 'Block.dart';
 
 class MathModel{
 
@@ -22,6 +21,10 @@ class MathModel{
   void addBlock(Block block){
     blocks.add(block);
   }
+  void addBlockRange(Iterable<Block> blocks){
+    this.blocks.addAll(blocks);
+  }
+  
   void removeBlock(Block block){
     blocks.remove(block);
     print('was removed ${block.name}');

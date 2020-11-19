@@ -1,7 +1,9 @@
 import 'dart:math';
 
-import 'Block.dart';
-import 'BlockIO.dart';
+import 'package:fluttermatlab/models/Block.dart';
+import 'package:fluttermatlab/models/BlockIO.dart';
+import 'package:fluttermatlab/models/Blocks/MathModel.dart';
+
 import 'package:fluttermatlab/services/workspace.dart';
 
 class TransferFcn extends Block{
@@ -14,9 +16,41 @@ class TransferFcn extends Block{
   @override
   String name;
 
+  List<double> historyOut = [];
+  List<double> historyIn = [];
+
+  Block inputBlock;
+  Block outputBlock;
+  MathModel mathModel;
+
   TransferFcn({this.nums, this.dens, this.name = 'TransferFcn'}){
     setDefaultIO();
   }
+
+//  void createMathModel(){
+//    mathModel = MathModel();
+//    List<Block> numBloks = [];
+//    List<Block> denBloks = [];
+//    for (int i = 0; i < nums.length; i++) {
+//      if (nums[i] != 0 && i != 0)
+//        numBloks.add(Derivative(name: 'num$i'));
+//      else
+//        numBloks.add(Coef(name: 'num$i'));
+//      if (i != 0) (numBloks[i].Inputs[0] as PortInput).connect(numBloks[i-1].Outputs[0] as PortOutput);
+//    }
+//    for (int i = 0; i < dens.length; i++) {
+//      if (nums[i] != 0 && i != 0)
+//        denBloks.add(Integrator(name: 'den$i'));
+//      else
+//        denBloks.add(Coef(name: 'den$i'));
+//      if (i != 0) (denBloks[i].Inputs[0] as PortInput).connect(denBloks[i-1].Outputs[0] as PortOutput);
+//    }
+//
+//    outputBlock = numBloks.last;
+//
+//    mathModel.addBlockRange(numBloks);
+//    mathModel.addBlockRange(denBloks);
+//  }
 
   String arrayToString(List<double> nums){
     String str = '';
@@ -66,10 +100,13 @@ class TransferFcn extends Block{
     this.nums.clear();
     for(int i = 0; i < nums.length; i++){
       String value = nums[i].trim();
+      double num = 0;
       if (workspace.variables.containsKey(value)) {
+        num = double.parse(workspace.variables[value]);
         this.nums.add(double.parse(workspace.variables[value]));
       }
-      else this.nums.add(double.parse(value));
+      else num = double.parse(value);
+      this.nums.add(num);
     }
     var densStr = preference['dens'].toString().replaceAll('[', '').replaceAll(']', '');
     var dens = densStr.split(',');
@@ -95,6 +132,8 @@ class TransferFcn extends Block{
     }
     double up = 0;
     double down = 0;
+
+
     for(int i = 0; i < nums.length; i++){
       up += nums[i] * pow(T, i);
     }
@@ -102,6 +141,16 @@ class TransferFcn extends Block{
       down += dens[i] * pow(T, i);
     }
     _out = (_in - _out) * up / down;
+
+
+    for (int i = 0; i < nums.length; i++){
+
+    }
+    for (int i = 0; i < dens.length; i++){
+      if (i < historyIn.length){
+        up += historyIn[i-1];
+      }
+    }
 
     if (state.length == 0){
       state.add(_out);

@@ -4,14 +4,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttermatlab/models/Block.dart';
 import 'package:fluttermatlab/models/BlockIO.dart';
-import 'package:fluttermatlab/models/Constant.dart';
-import 'package:fluttermatlab/models/Integrator.dart';
-import 'package:fluttermatlab/models/MathModel.dart';
-import 'package:fluttermatlab/models/Scope.dart';
-import 'package:fluttermatlab/models/TransferFcn.dart';
+import 'package:fluttermatlab/models/Blocks/Constant.dart';
+import 'package:fluttermatlab/models/Blocks/Integrator.dart';
+import 'package:fluttermatlab/models/Blocks/MathModel.dart';
+import 'package:fluttermatlab/models/Blocks/Scope.dart';
+import 'package:fluttermatlab/models/Blocks/Sum.dart';
+import 'package:fluttermatlab/models/Blocks/TransferFcn.dart';
 import 'package:fluttermatlab/services/Factory.dart';
 import 'package:fluttermatlab/services/library.dart';
-import 'package:fluttermatlab/services/network.dart';
 import 'package:fluttermatlab/services/workspace.dart';
 import 'package:fluttermatlab/widgets/block.dart';
 import 'package:fluttermatlab/widgets/io.dart';
@@ -23,6 +23,7 @@ import 'package:fluttermatlab/other/enums.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class ModelPage extends StatefulWidget{
+  static bool first = true;
   _ModelPageState _instance;
   @override
   State createState() {
@@ -58,8 +59,11 @@ class _ModelPageState extends State<ModelPage>{
 
   @override
   void initState() {
-    workspace.selectedMathModel = workspace.selectedMathModel ?? createTestModel();
-    createTestModel();
+    if (ModelPage.first) {
+      workspace.selectedMathModel = workspace.selectedMathModel ?? createTestModel();
+      createTestModel();
+      ModelPage.first = false;
+    }
     addEvents();
 
     SchedulerBinding.instance.addPostFrameCallback((_) async {
@@ -82,18 +86,20 @@ class _ModelPageState extends State<ModelPage>{
     var transfer = new TransferFcn(nums: [1], dens: [1,1]);
     var integrator = new Integrator(coef: 2.1);
     var scope = new Scope(numIn: 2);
+    var sum = new Sum(operators: '+-');
 
 
     blocks.add(constant);
     blocks.add(transfer);
     blocks.add(integrator);
     blocks.add(scope);
+    blocks.add(sum);
     double countX = 20;
     double countY = 20;
 
-    (constant.Outputs[0] as PortOutput).connect(transfer.Inputs[0]);
-    (constant.Outputs[0] as PortOutput).connect(integrator.Inputs[0]);
-    (integrator.Outputs[0] as PortOutput).connect(scope.Inputs[0]);
+//    (constant.Outputs[0] as PortOutput).connect(transfer.Inputs[0]);
+//    (constant.Outputs[0] as PortOutput).connect(integrator.Inputs[0]);
+//    (integrator.Outputs[0] as PortOutput).connect(scope.Inputs[0]);
 
     blocks.forEach((block) {
       workspace.selectedMathModel.addBlockWidget(PositionedBlockWidget(x: countX, y: countY, block: block));

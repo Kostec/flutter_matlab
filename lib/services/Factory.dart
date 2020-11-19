@@ -1,10 +1,13 @@
 import 'package:fluttermatlab/models/Block.dart';
-import 'package:fluttermatlab/models/Constant.dart';
-import 'package:fluttermatlab/models/Derivative.dart';
-import 'package:fluttermatlab/models/Integrator.dart';
-import 'package:fluttermatlab/models/Scope.dart';
-import 'package:fluttermatlab/models/Sum.dart';
-import 'package:fluttermatlab/models/TransferFcn.dart';
+import 'package:fluttermatlab/models/Blocks/Coef.dart';
+import 'package:fluttermatlab/models/Blocks/Constant.dart';
+import 'package:fluttermatlab/models/Blocks/Derivative.dart';
+import 'package:fluttermatlab/models/Blocks/Integrator.dart';
+import 'package:fluttermatlab/models/Blocks/Scope.dart';
+import 'package:fluttermatlab/models/Blocks/Sum.dart';
+import 'package:fluttermatlab/models/Blocks/TransferFcn.dart';
+import 'package:fluttermatlab/models/Blocks/Input.dart';
+import 'package:fluttermatlab/models/Blocks/Output.dart';
 
 class Factory{
   Block CreateBlock(Type type, String name){
@@ -16,6 +19,9 @@ class Factory{
       case Integrator: block = Integrator(coef: 1, name: name); break;
       case Sum: block = Sum(); break;
       case Scope: block = Scope(); break;
+      case Coef: block = Coef(); break;
+      case Input: block = Input(); break;
+      case Output: block = Output(); break;
     }
     return block;
   }

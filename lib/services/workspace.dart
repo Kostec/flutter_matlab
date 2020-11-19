@@ -1,4 +1,5 @@
-import 'package:fluttermatlab/models/MathModel.dart';
+
+import 'package:fluttermatlab/models/Blocks/MathModel.dart';
 
 /// класс предназначен для хранения переменных рабочей среды программы
 class workspace{

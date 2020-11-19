@@ -11,14 +11,15 @@ abstract class Block {
   double time = 0;
   List<double> state = [];
 
-  List<PortIO> get Inputs{
-    return IO.where((io) => io.type == IOtype.input).toList();
+  List<PortInput> get Inputs{
+    return IO.where((io) => io.type == IOtype.input).map((e) => e as PortInput).toList();
   }
 
-  List<PortIO> get Outputs{
-    return IO.where((io) => io.type == IOtype.output).toList();
+  List<PortOutput> get Outputs{
+    return IO.where((io) => io.type == IOtype.output).map((e) => e as PortOutput).toList();
   }
 
+  @override
   void setDefaultIO(){
     for(int i = 0; i < numIn; i++){
       IO.add(PortInput(num: i));
@@ -28,6 +29,7 @@ abstract class Block {
     }
   }
 
+  @override
   void ResetIO(){
     Inputs.forEach((element){
       element.value = 0;
@@ -42,10 +44,12 @@ abstract class Block {
     return this.runtimeType.toString();
   }
 
+  @override
   Map<String, dynamic> getPreference(){
     return {'name': name};
   }
 
+  @override
   void setPreference(Map<String, dynamic> preference){
 
     Map<String, dynamic> map = {};
@@ -63,14 +67,17 @@ abstract class Block {
     name = preference['name'];
   }
 
+  @override
   List<String> getDisplay() {
     return [this.name];
   }
 
+  @override
   List<double> evaluate(double T){
     time += T;
   }
 
+  @override
   void resetState(){
     time = 0;
     state.clear();

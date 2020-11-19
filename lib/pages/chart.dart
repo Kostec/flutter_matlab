@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttermatlab/models/Scope.dart';
+import 'package:fluttermatlab/models/Blocks/Scope.dart';
 import 'package:fluttermatlab/services/workspace.dart';
 import 'package:fluttermatlab/widgets/menu.dart';
 import 'package:fl_chart/fl_chart.dart';

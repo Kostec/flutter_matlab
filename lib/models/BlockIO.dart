@@ -2,7 +2,7 @@ import 'package:fluttermatlab/other/enums.dart';
 
 typedef PortIOCallback = Function(PortIO io);
 
-class PortIO{
+abstract class PortIO{
   String name;
   int num;
   IOtype type;

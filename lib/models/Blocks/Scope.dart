@@ -1,5 +1,5 @@
 import 'package:fluttermatlab/models/Block.dart';
-import 'BlockIO.dart';
+import 'package:fluttermatlab/models/BlockIO.dart';
 
 class Scope extends Block{
 
@@ -40,7 +40,8 @@ class Scope extends Block{
     if (_numIn > numIn) {
       for (int i = numIn; i < _numIn; i++) {
         stateInputs[i] = {};
-        IO.add(PortInput(num: i));
+        PortIO portIO = PortInput(num: i);
+        IO.add(portIO);
       }
     }
     else{
