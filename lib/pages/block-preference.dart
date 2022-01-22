@@ -60,7 +60,7 @@ class _BlockPreferencePageState extends State<BlockPreferencePage>{
     blockPreference.forEach((key, value) {
       form.add(FormBuilderTextField(
         decoration: InputDecoration(labelText: key, labelStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        attribute: key,
+        name: key,
         initialValue: value.toString(),
       ));
     });

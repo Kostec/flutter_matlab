@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fluttermatlab/models/BlockIO.dart';
 import 'package:fluttermatlab/other/enums.dart';
 
@@ -131,7 +130,7 @@ class IOWidgetState extends State<IOWidget>{
                   var key = dialogItems.keys.toList()[index];
                   var func = dialogItems[key];
                   return Container(
-                    child: FlatButton(child: Text(key, style: TextStyle(color: Colors.black, fontSize: 32),), onPressed: func,),
+                    child: TextButton(child: Text(key, style: TextStyle(color: Colors.black, fontSize: 32),), onPressed: func,),
                   );
                 }),
             margin: EdgeInsets.only(bottom: 50, left: 12, right: 12),

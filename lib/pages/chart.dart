@@ -117,7 +117,7 @@ class MyChart{
     return LineChart(LineChartData(
       lineTouchData: LineTouchData(
         touchTooltipData: LineTouchTooltipData(tooltipBgColor: Colors.blueGrey.withOpacity(0.8),),
-        touchCallback: (LineTouchResponse touchResponse) {},
+        // touchCallback: (LineTouchResponse touchResponse) {},
         handleBuiltInTouches: true,
       ),
       gridData: FlGridData(show: true,),
@@ -126,14 +126,14 @@ class MyChart{
         bottomTitles: SideTitles(
           showTitles: true,
           reservedSize: 22,
-          textStyle: const TextStyle(color: Color(0xff72719b), fontWeight: FontWeight.bold, fontSize: 16,),
+          // textStyle: const TextStyle(color: Color(0xff72719b), fontWeight: FontWeight.bold, fontSize: 16,),
           margin: 10,
           interval: (_chartData.length/10000).toDouble(),
         ),
         // ось Y
         leftTitles: SideTitles(
           showTitles: true,
-          textStyle: const TextStyle(color: Color(0xff75729e), fontWeight: FontWeight.bold, fontSize: 14,),
+          // textStyle: const TextStyle(color: Color(0xff75729e), fontWeight: FontWeight.bold, fontSize: 14,),
           interval: maxY/5,
           margin: 8,
           reservedSize: 30,

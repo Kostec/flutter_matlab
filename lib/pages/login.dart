@@ -32,17 +32,17 @@ class LoginPageState extends State<LoginPage>{
                 child: Column(
                   children: [
                     FormBuilderTextField(
-                      attribute: 'email',
+                      name: 'email',
                       decoration: InputDecoration(labelText: 'email', labelStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                       keyboardType: TextInputType.emailAddress,
                     ),
                     FormBuilderTextField(
-                      attribute: 'username',
+                      name: 'username',
                       decoration: InputDecoration(labelText: 'username', labelStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                       keyboardType: TextInputType.text,
                     ),
                     FormBuilderTextField(
-                      attribute: 'password',
+                      name: 'password',
                       decoration: InputDecoration(labelText: 'password', labelStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                       keyboardType: TextInputType.visiblePassword,
                       obscureText: true,
