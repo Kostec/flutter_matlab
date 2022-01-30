@@ -51,10 +51,13 @@ class ViewMathModel{
   }
   void removeBlockWidget(PositionedBlockWidget blockWidget){
     print('will be removed ${blockWidget.block.name}');
-    if (blockWidgets.contains(blockWidget)) blockWidgets.remove(blockWidget);
-    if (mathModel.blocks.contains(blockWidget.block)) mathModel.removeBlock(blockWidget.block);
-    print('endRemove');
+    // if (mathModel.blocks.contains(blockWidget.block)) mathModel.removeBlock(blockWidget.block);
+    mathModel.blocks.removeWhere((element) => element == blockWidget.block);
+    blockWidgets.removeWhere((element) => element == blockWidget);
+
+    // if (blockWidgets.contains(blockWidget)) blockWidgets.remove(blockWidget);
     if (this == workspace.selectedMathModel) removeBlockCallback.forEach((element) { element(blockWidget); });
+    print('endRemove');
   }
   void removeBlock(Block block){
     var widget = blockWidgets.firstWhere((element) => element.block == block, orElse: null);

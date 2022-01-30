@@ -69,9 +69,7 @@ class _ModelPageState extends State<ModelPage>{
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       _builded = true;
       _buildLines();
-      setState(() {
-
-      });
+      _update();
     });
 
 
@@ -133,6 +131,10 @@ class _ModelPageState extends State<ModelPage>{
     )]);
   }
 
+  void _update() {
+    setState((){});
+  }
+
   AppBar _buildAppBar(){
     moreItems = {
       'Новыя модель' : newModel,
@@ -147,7 +149,7 @@ class _ModelPageState extends State<ModelPage>{
       actions: [
         IconButton(
           icon: Icon(Icons.refresh),
-          onPressed: (){setState((){});},
+          onPressed: _update,
         ),
         IconButton(
           icon: Icon(Icons.play_arrow),
@@ -158,7 +160,7 @@ class _ModelPageState extends State<ModelPage>{
             print('start');
             progressStep = 0;
             print('progressStep: $progressStep');
-            setState(() { });
+            _update();
 
             workspace.selectedMathModel.mathModel.onTimeChange = (time, start, end) {
               int currentStep = (time/end * 100).toInt();
@@ -214,10 +216,12 @@ class _ModelPageState extends State<ModelPage>{
   }
 
   Widget _buildBody(){
-    blocks = [];
+    blocks.clear();
+    stackChild.clear();
+
     workspace.selectedMathModel.blockWidgets.forEach((block){
       blocks.add(block);
-      block.positionChangedCallback = (x,y) => setState(() => {});
+      block.positionChangedCallback = (x,y) => _update();
       block.inputs.forEach((io) {
         (io as IOWidget).onConnect = IOWidgetConnectOrDisconnectIO;
         (io as IOWidget).onDisconnect = IOWidgetConnectOrDisconnectIO;
@@ -231,24 +235,25 @@ class _ModelPageState extends State<ModelPage>{
     });
 
     if (_builded) _buildLines();
-    stackChild = [];
+
     stackChild.addAll(lines);
     stackChild.addAll(blocks);
+
     return GestureDetector(
       onTapDown: (details) => {},
       child: Zoom(
-        width: width,
-        height: heigh,
+        maxZoomWidth: width,
+        maxZoomHeight: heigh,
         doubleTapZoom: true,
         enableScroll: true,
         onScaleUpdate: (x,y){
           scaleX = x;
           scaleY = y;
-          if (_builded) setState(()=>{});
+          if (_builded) _update();
         },
         onPositionUpdate: (offset){
           zoomOffset = offset;
-          if (_builded) setState(()=>{});
+          if (_builded) _update();
         },
         child: Stack(key: bodyKey, children: stackChild,),
     ));
@@ -369,7 +374,7 @@ class _ModelPageState extends State<ModelPage>{
       case GestureEnum.double_tap: break;
       case GestureEnum.long_press: break;
     }
-    setState(() {});
+    _update();
   }
 
   IOWidget get SelectedPort => IOWidget.SelectedPort;
@@ -380,16 +385,16 @@ class _ModelPageState extends State<ModelPage>{
   }
 
   void BlockWasRemoved(PositionedBlockWidget blockWidget){
-    print('main remove block');
-    setState(() { });
+    print('main remove block ${blockWidget.block.name}');
+    _update();
   }
   void BlockWasAdded(PositionedBlockWidget blockWidget){
     print('main add block');
-    setState(() { });
+    _update();
   }
 
   void IOWidgetConnectOrDisconnectIO(IOWidget io){
-    setState(() { });
+    _update();
   }
 
   void exit(){
@@ -409,11 +414,11 @@ class _ModelPageState extends State<ModelPage>{
     RemoveEvents();
     workspace.selectedMathModel = new ViewMathModel();
     addEvents();
-    setState((){});
+    _update();
   }
   void addBlock(){
     showAddBlockDialog(context);
-    setState(() {});
+    _update();
   }
 
   @override
